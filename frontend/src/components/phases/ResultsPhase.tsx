@@ -14,33 +14,26 @@ export default function ResultsPhase() {
   const totalImpostors = players.filter((p) => p.role === 'impostor').length;
 
   const handleContinue = () => {
-    if (eliminatedPlayer?.role === 'impostor') {
-      // Impostor was eliminated
-      if (round >= totalImpostors) {
-        // All rounds completed and impostor revealed, civilians win
-        useGameState.setState({ gameWinner: 'civilians', phase: 'game-over' });
-      } else {
-        // Continue to next round - go directly to discussion (clue phase only in round 1)
-        useGameState.setState({
-          phase: 'discussion',
-          currentCluePlayerIndex: 0,
-          votingResults: {},
-          round: round + 1,
-        });
-      }
-    } else if (round >= totalImpostors) {
-      // All rounds completed without revealing impostor, impostors win
-      useGameState.setState({ gameWinner: 'impostors', phase: 'game-over' });
-    } else {
-      // Civil was eliminated, continue to next round
-      // Go directly to discussion phase (skip clue phase)
-      useGameState.setState({
-        phase: 'discussion',
-        currentCluePlayerIndex: 0,
-        votingResults: {},
-        round: round + 1,
-      });
+    // Check win conditions
+    if (impostors.length === 0) {
+      // All impostors have been eliminated, civilians win
+      useGameState.setState({ gameWinner: 'civilians', phase: 'game-over' });
+      return;
     }
+
+    if (civilians.length === 1) {
+      // Only 1 civilian left, impostors win
+      useGameState.setState({ gameWinner: 'impostors', phase: 'game-over' });
+      return;
+    }
+
+    // Continue to next round - go directly to discussion (clue phase only in round 1)
+    useGameState.setState({
+      phase: 'discussion',
+      currentCluePlayerIndex: 0,
+      votingResults: {},
+      round: round + 1,
+    });
   };
 
   return (
