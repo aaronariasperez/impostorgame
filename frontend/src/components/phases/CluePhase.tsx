@@ -8,6 +8,7 @@ export default function CluePhase() {
   const [revealed, setRevealed] = useState(false);
   const [dragY, setDragY] = useState(0);
   const [displayedPlayerName, setDisplayedPlayerName] = useState<string>('');
+  const [coverPlayerName, setCoverPlayerName] = useState<string>('');
   const dragRef = useRef<number>(0);
   const startYRef = useRef<number>(0);
 
@@ -27,6 +28,10 @@ export default function CluePhase() {
     setDragY(0);
     setTimeLeft(240);
     setDisplayedPlayerName('');
+    // Set cover player name immediately when player changes
+    if (currentCluePlayer) {
+      setCoverPlayerName(currentCluePlayer.name);
+    }
   }, [currentCluePlayer?.id]);
 
   // Update displayed player name only after revealed
@@ -102,8 +107,46 @@ export default function CluePhase() {
   const roleText = isCivilian ? '👤 Civil' : '🎭 Impostor';
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-purple-600 to-blue-600 relative overflow-hidden">
-      {/* Content - only render AFTER revealed */}
+    <div 
+      key={currentCluePlayer?.id}
+      className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-purple-600 to-blue-600 relative overflow-hidden"
+    >
+      {/* Draggable cover card - ONLY render when NOT revealed */}
+      {!revealed && (
+        <div
+          className="fixed inset-0 bg-gradient-to-b from-purple-700 to-purple-900 rounded-b-3xl shadow-2xl p-8 select-none z-50 flex flex-col items-center justify-end will-change-transform"
+          style={{
+            transform: `translateY(-${dragY}px)`,
+            touchAction: 'none',
+          }}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={() => {
+            dragRef.current = dragY;
+          }}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={() => {
+            dragRef.current = dragY;
+          }}
+        >
+          <div className="flex justify-center mb-4 pt-4">
+            <div className="w-12 h-1 bg-white rounded-full opacity-70"></div>
+          </div>
+
+          <div className="text-center text-white mt-12 flex-1 flex flex-col justify-center">
+            <p className="text-3xl font-bold mb-2">Turno de {coverPlayerName}</p>
+            <p className="text-lg mb-8 opacity-90">Desliza hacia arriba para ver tu información</p>
+            <div className="animate-bounce">
+              <svg className="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19V5m0 0l-7 7m0 0l7-7m0 0l7 7" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Content - ONLY render AFTER revealed */}
       {revealed && (
         <div className="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full">
           <div className="text-center mb-8">
@@ -148,41 +191,6 @@ export default function CluePhase() {
               <p className="text-gray-600">Esperando al siguiente jugador...</p>
             </div>
           )}
-        </div>
-      )}
-
-      {/* Draggable cover card - only render when not revealed */}
-       {!revealed && (
-         <div
-           className="fixed inset-0 bg-gradient-to-b from-purple-700 to-purple-900 rounded-b-3xl shadow-2xl p-8 select-none z-50 flex flex-col items-center justify-end will-change-transform"
-           style={{
-             transform: `translateY(-${dragY}px)`,
-             touchAction: 'none',
-           }}
-           onMouseDown={handleMouseDown}
-           onMouseMove={handleMouseMove}
-           onMouseUp={() => {
-             dragRef.current = dragY;
-           }}
-           onTouchStart={handleTouchStart}
-           onTouchMove={handleTouchMove}
-           onTouchEnd={() => {
-             dragRef.current = dragY;
-           }}
-         >
-          <div className="flex justify-center mb-4 pt-4">
-            <div className="w-12 h-1 bg-white rounded-full opacity-70"></div>
-          </div>
-
-          <div className="text-center text-white mt-12 flex-1 flex flex-col justify-center">
-            <p className="text-3xl font-bold mb-2">Turno de {currentCluePlayer.name}</p>
-            <p className="text-lg mb-8 opacity-90">Desliza hacia arriba para ver tu información</p>
-            <div className="animate-bounce">
-              <svg className="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19V5m0 0l-7 7m0 0l7-7m0 0l7 7" />
-              </svg>
-            </div>
-          </div>
         </div>
       )}
     </div>
