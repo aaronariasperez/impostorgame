@@ -1,0 +1,190 @@
+import { useState, useEffect, useRef } from 'react';
+import { useGameState } from '@/hooks/useGameState';
+import Timer from '@/components/Timer';
+
+export default function CluePhase() {
+  const [timeLeft, setTimeLeft] = useState(240); // 4 minutes
+  const [submitted, setSubmitted] = useState(false);
+  const [revealed, setRevealed] = useState(false);
+  const [dragY, setDragY] = useState(0);
+  const [displayedPlayerName, setDisplayedPlayerName] = useState<string>('');
+  const dragRef = useRef<number>(0);
+  const startYRef = useRef<number>(0);
+
+  const currentCluePlayer = useGameState((state) => state.getCurrentCluePlayer());
+  const submitClue = useGameState((state) => state.submitClue);
+  const getActivePlayers = useGameState((state) => state.getActivePlayers);
+  const round = useGameState((state) => state.round);
+
+  const activePlayers = getActivePlayers();
+  const currentPlayerIndex = activePlayers.findIndex((p) => p.id === currentCluePlayer?.id);
+  const isFirstRound = round === 1;
+
+  // Reset state when current player changes
+  useEffect(() => {
+    setSubmitted(false);
+    setRevealed(false);
+    setDragY(0);
+    setTimeLeft(240);
+    setDisplayedPlayerName('');
+  }, [currentCluePlayer?.id]);
+
+  // Update displayed player name only after revealed
+  useEffect(() => {
+    if (revealed && currentCluePlayer) {
+      setDisplayedPlayerName(currentCluePlayer.name);
+    }
+  }, [revealed, currentCluePlayer]);
+
+  useEffect(() => {
+    if (submitted || timeLeft <= 0) {
+      return;
+    }
+
+    const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [timeLeft, submitted]);
+
+  const handleContinue = () => {
+    if (!currentCluePlayer) return;
+    setSubmitted(true);
+    submitClue(currentCluePlayer.id, '');
+    setTimeLeft(240);
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    startYRef.current = e.clientY;
+    dragRef.current = dragY;
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (e.buttons !== 1) return; // Only if mouse button is pressed
+
+    const diff = e.clientY - startYRef.current;
+    const newDragY = Math.max(0, dragRef.current - diff);
+
+    setDragY(newDragY);
+
+    // Reveal if dragged up enough (300px)
+    if (newDragY > 300) {
+      setRevealed(true);
+    }
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    startYRef.current = e.touches[0].clientY;
+    dragRef.current = dragY;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    const diff = e.touches[0].clientY - startYRef.current;
+    const newDragY = Math.max(0, dragRef.current - diff);
+
+    setDragY(newDragY);
+
+    // Reveal if dragged up enough (300px)
+    if (newDragY > 300) {
+      setRevealed(true);
+    }
+  };
+
+  if (!currentCluePlayer) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-white text-xl">Cargando...</div>
+      </div>
+    );
+  }
+
+  const isCivilian = currentCluePlayer.role === 'civilian';
+  const bgColor = isCivilian ? 'bg-blue-100 border-blue-400' : 'bg-red-100 border-red-400';
+  const textColor = isCivilian ? 'text-blue-600' : 'text-red-600';
+  const roleText = isCivilian ? '👤 Civil' : '🎭 Impostor';
+
+  return (
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-purple-600 to-blue-600 relative overflow-hidden">
+      {/* Content - only render AFTER revealed */}
+      {revealed && (
+        <div className="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">
+              Turno de {displayedPlayerName}
+            </h2>
+            <p className="text-gray-600">
+              Jugador {currentPlayerIndex + 1} de {activePlayers.length}
+            </p>
+            <p className="text-sm text-gray-500 mt-2">Ronda {round}</p>
+          </div>
+
+          <Timer timeLeft={timeLeft} />
+
+          <div className={`border-2 rounded-lg p-6 mb-6 text-center ${bgColor}`}>
+            <p className="text-gray-700 font-semibold mb-2">Eres:</p>
+            <p className={`text-3xl font-bold ${textColor}`}>
+              {roleText}
+            </p>
+          </div>
+
+          {isFirstRound && (
+            <div className={`border-2 rounded-lg p-6 mb-6 text-center ${bgColor}`}>
+              <p className="text-gray-700 font-semibold mb-2">Tu palabra es:</p>
+              <p className="text-4xl font-bold text-purple-600">
+                {currentCluePlayer.word}
+              </p>
+            </div>
+          )}
+
+          {!submitted && (
+            <button
+              onClick={handleContinue}
+              className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200"
+            >
+              Continuar
+            </button>
+          )}
+
+          {submitted && (
+            <div className="text-center">
+              <p className="text-gray-600">Esperando al siguiente jugador...</p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Draggable cover card - only render when not revealed */}
+       {!revealed && (
+         <div
+           className="fixed inset-0 bg-gradient-to-b from-purple-700 to-purple-900 rounded-b-3xl shadow-2xl p-8 select-none z-50 flex flex-col items-center justify-end will-change-transform"
+           style={{
+             transform: `translateY(-${dragY}px)`,
+             touchAction: 'none',
+           }}
+           onMouseDown={handleMouseDown}
+           onMouseMove={handleMouseMove}
+           onMouseUp={() => {
+             dragRef.current = dragY;
+           }}
+           onTouchStart={handleTouchStart}
+           onTouchMove={handleTouchMove}
+           onTouchEnd={() => {
+             dragRef.current = dragY;
+           }}
+         >
+          <div className="flex justify-center mb-4 pt-4">
+            <div className="w-12 h-1 bg-white rounded-full opacity-70"></div>
+          </div>
+
+          <div className="text-center text-white mt-12 flex-1 flex flex-col justify-center">
+            <p className="text-3xl font-bold mb-2">Turno de {currentCluePlayer.name}</p>
+            <p className="text-lg mb-8 opacity-90">Desliza hacia arriba para ver tu información</p>
+            <div className="animate-bounce">
+              <svg className="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19V5m0 0l-7 7m0 0l7-7m0 0l7 7" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
