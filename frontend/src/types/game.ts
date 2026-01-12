@@ -1,5 +1,5 @@
 export type PlayerRole = 'civilian' | 'impostor';
-export type GamePhase = 'setup' | 'clue' | 'discussion' | 'voting' | 'results' | 'game-over';
+export type GamePhase = 'setup' | 'clue' | 'turn-starter' | 'discussion' | 'voting' | 'results' | 'game-over';
 
 export interface Player {
   id: string;
@@ -21,6 +21,7 @@ export interface GameState {
   votingResults: Record<string, number>;
   eliminatedPlayer?: Player;
   gameWinner?: 'civilians' | 'impostors';
+  turnStarterId?: string;
 }
 
 export interface WordItem {

@@ -73,6 +73,16 @@ export default function GameSetup() {
     const newNames = [...playerNames];
     newNames[index] = name;
     setPlayerNames(newNames);
+    
+    // Save to localStorage immediately
+    try {
+      const saved = localStorage.getItem('impostor_player_names');
+      const savedNames = saved ? JSON.parse(saved) : {};
+      savedNames[`player-${index}`] = name;
+      localStorage.setItem('impostor_player_names', JSON.stringify(savedNames));
+    } catch {
+      // Silently fail if localStorage is not available
+    }
   };
 
   const handleStartGame = () => {
