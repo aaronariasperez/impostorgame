@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useGameState } from '@/hooks/useGameState';
 import { wordPackService } from '@/services/wordPackService';
+import { logGameEvent } from '@/services/telemetryService';
 import { WordPack } from '@/types/game';
 
 export default function GameSetup() {
@@ -24,7 +25,7 @@ export default function GameSetup() {
       const saved = localStorage.getItem('impostor_player_names');
       if (saved) {
         const savedNames = JSON.parse(saved);
-        return Array.from({ length: count }, (_, i) => 
+        return Array.from({ length: count }, (_, i) =>
           savedNames[`player-${i}`] || `Jugador ${i + 1}`
         );
       }
@@ -55,9 +56,7 @@ export default function GameSetup() {
 
   // Update player names when player count changes
   useEffect(() => {
-    setPlayerNames(
-      loadSavedPlayerNames(playerCount)
-    );
+    setPlayerNames(loadSavedPlayerNames(playerCount));
   }, [playerCount]);
 
   const handleSelectPack = async (packId: string) => {
@@ -91,6 +90,14 @@ export default function GameSetup() {
     for (let i = 0; i < playerCount; i++) {
       setPlayerName(`player-${i}`, playerNames[i]);
     }
+
+    // Log game start event
+    logGameEvent('game_start', {
+      playerCount,
+      impostorCount,
+      wordPack: selectedPack.name,
+      playerNames,
+    });
 
     startGame();
   };
