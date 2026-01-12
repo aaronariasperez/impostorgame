@@ -18,6 +18,22 @@ export default function GameSetup() {
   const startGame = useGameState((state) => state.startGame);
   const setPlayerName = useGameState((state) => state.setPlayerName);
 
+  // Load saved player names from localStorage
+  const loadSavedPlayerNames = (count: number): string[] => {
+    try {
+      const saved = localStorage.getItem('impostor_player_names');
+      if (saved) {
+        const savedNames = JSON.parse(saved);
+        return Array.from({ length: count }, (_, i) => 
+          savedNames[`player-${i}`] || `Jugador ${i + 1}`
+        );
+      }
+    } catch {
+      // Silently fail
+    }
+    return Array.from({ length: count }, (_, i) => `Jugador ${i + 1}`);
+  };
+
   useEffect(() => {
     const loadWordPacks = async () => {
       try {
@@ -33,12 +49,14 @@ export default function GameSetup() {
     };
 
     loadWordPacks();
+    // Load saved player names on mount
+    setPlayerNames(loadSavedPlayerNames(3));
   }, []);
 
   // Update player names when player count changes
   useEffect(() => {
     setPlayerNames(
-      Array.from({ length: playerCount }, (_, i) => `Jugador ${i + 1}`)
+      loadSavedPlayerNames(playerCount)
     );
   }, [playerCount]);
 
@@ -59,22 +77,21 @@ export default function GameSetup() {
   };
 
   const handleStartGame = () => {
-    if (!selectedPack?.words || selectedPack.words.length < 2) {
+    if (!selectedPack?.words || selectedPack.words.length < 1) {
       setError('Paquete de palabras inválido');
       return;
     }
 
     const shuffledWords = [...selectedPack.words].sort(() => Math.random() - 0.5);
     const civilianWord = shuffledWords[0];
-    const impostorWord = shuffledWords[1];
 
-    initializeGame(playerCount, impostorCount, civilianWord, impostorWord);
-    
+    initializeGame(playerCount, impostorCount, civilianWord, '', selectedPack.wordItems);
+
     // Set player names
     for (let i = 0; i < playerCount; i++) {
       setPlayerName(`player-${i}`, playerNames[i]);
     }
-    
+
     startGame();
   };
 

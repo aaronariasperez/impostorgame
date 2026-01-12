@@ -3,9 +3,9 @@ import { GameState, Player, PlayerRole } from '@/types/game';
 
 interface GameStore extends GameState {
   // Setup actions
-  initializeGame: (playerCount: number, impostorCount: number, civilianWord: string, impostorWord: string) => void;
+  initializeGame: (playerCount: number, impostorCount: number, civilianWord: string, impostorWord: string, wordItems?: any[]) => void;
   setPlayerName: (playerId: string, name: string) => void;
-  
+
   // Game flow actions
   startGame: () => void;
   submitClue: (playerId: string, clue: string) => void;
@@ -13,7 +13,7 @@ interface GameStore extends GameState {
   submitVote: (playerId: string, votedForId: string) => void;
   moveToResults: () => void;
   resetGame: () => void;
-  
+
   // Utility
   getCurrentCluePlayer: () => Player | null;
   getActivePlayers: () => Player[];
@@ -26,17 +26,41 @@ const initialState: GameState = {
   players: [],
   civilianWord: '',
   impostorWord: '',
+  impostorHint: '',
   currentCluePlayerIndex: 0,
   round: 1,
   votingResults: {},
 };
 
+// Load saved player names from localStorage
+const loadSavedPlayerNames = (): Record<string, string> => {
+  try {
+    const saved = localStorage.getItem('impostor_player_names');
+    return saved ? JSON.parse(saved) : {};
+  } catch {
+    return {};
+  }
+};
+
+// Save player names to localStorage
+const savePlayerNames = (players: Player[]) => {
+  try {
+    const names: Record<string, string> = {};
+    players.forEach((p) => {
+      names[p.id] = p.name;
+    });
+    localStorage.setItem('impostor_player_names', JSON.stringify(names));
+  } catch {
+    // Silently fail if localStorage is not available
+  }
+};
+
 export const useGameState = create<GameStore>((set, get) => ({
   ...initialState,
-
-  initializeGame: (playerCount, impostorCount, civilianWord, impostorWord) => {
+  initializeGame: (playerCount, impostorCount, civilianWord, impostorWord, wordItems) => {
     const players: Player[] = [];
     const roles: PlayerRole[] = [];
+    const savedNames = loadSavedPlayerNames();
 
     // Create roles array
     for (let i = 0; i < impostorCount; i++) {
@@ -52,13 +76,27 @@ export const useGameState = create<GameStore>((set, get) => ({
       [roles[i], roles[j]] = [roles[j], roles[i]];
     }
 
-    // Create players
+    // Generate random hint for impostor from the CIVILIAN word's attributes
+    let impostorHint = '';
+    if (wordItems && wordItems.length > 0) {
+      // Find the word item that matches the civilian word
+      const civilianWordItem = wordItems.find((item: any) => item.word === civilianWord);
+      if (civilianWordItem && civilianWordItem.attributes && civilianWordItem.attributes.length > 0) {
+        // Select a random attribute from the civilian word
+        const randomAttribute = civilianWordItem.attributes[Math.floor(Math.random() * civilianWordItem.attributes.length)];
+        impostorHint = randomAttribute;
+      }
+    }
+
+    // Create players with saved names if available
     for (let i = 0; i < playerCount; i++) {
+      const playerId = `player-${i}`;
+      const savedName = savedNames[playerId];
       players.push({
-        id: `player-${i}`,
-        name: `Jugador ${i + 1}`,
+        id: playerId,
+        name: savedName || `Jugador ${i + 1}`,
         role: roles[i],
-        word: roles[i] === 'civilian' ? civilianWord : impostorWord,
+        word: roles[i] === 'civilian' ? civilianWord : impostorHint,
         isEliminated: false,
       });
     }
@@ -66,7 +104,8 @@ export const useGameState = create<GameStore>((set, get) => ({
     set({
       players,
       civilianWord,
-      impostorWord,
+      impostorWord: impostorHint,
+      impostorHint,
       phase: 'setup',
       currentCluePlayerIndex: 0,
       round: 1,
@@ -75,11 +114,13 @@ export const useGameState = create<GameStore>((set, get) => ({
   },
 
   setPlayerName: (playerId, name) => {
-    set((state) => ({
-      players: state.players.map((p) =>
+    set((state) => {
+      const updatedPlayers = state.players.map((p) =>
         p.id === playerId ? { ...p, name } : p
-      ),
-    }));
+      );
+      savePlayerNames(updatedPlayers);
+      return { players: updatedPlayers };
+    });
   },
 
   startGame: () => {
@@ -116,7 +157,7 @@ export const useGameState = create<GameStore>((set, get) => ({
   moveToResults: () => {
     const state = get();
     const votingResults = state.votingResults;
-    
+
     // Find player with most votes
     const eliminatedPlayerId = Object.entries(votingResults).reduce((a, b) =>
       b[1] > a[1] ? b : a

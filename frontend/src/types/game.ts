@@ -15,11 +15,17 @@ export interface GameState {
   players: Player[];
   civilianWord: string;
   impostorWord: string;
+  impostorHint: string;
   currentCluePlayerIndex: number;
   round: number;
   votingResults: Record<string, number>;
   eliminatedPlayer?: Player;
   gameWinner?: 'civilians' | 'impostors';
+}
+
+export interface WordItem {
+  word: string;
+  attributes: string[];
 }
 
 export interface WordPack {
@@ -28,4 +34,5 @@ export interface WordPack {
   description: string;
   language: string;
   words?: string[];
+  wordItems?: WordItem[];
 }
