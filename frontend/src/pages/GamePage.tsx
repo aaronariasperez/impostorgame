@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useGameState } from '@/hooks/useGameState';
 import { logGameEvent } from '@/services/telemetryService';
 import CluePhase from '@/components/phases/CluePhase';
+import TurnStarterPhase from '@/components/phases/TurnStarterPhase';
 import DiscussionPhase from '@/components/phases/DiscussionPhase';
 import VotingPhase from '@/components/phases/VotingPhase';
 import ResultsPhase from '@/components/phases/ResultsPhase';
@@ -31,6 +32,7 @@ export default function GamePage() {
   return (
     <div className="min-h-screen p-4">
       {phase === 'clue' && <CluePhase key={currentCluePlayer?.id} />}
+      {phase === 'turn-starter' && <TurnStarterPhase />}
       {phase === 'discussion' && <DiscussionPhase />}
       {phase === 'voting' && <VotingPhase />}
       {phase === 'results' && <ResultsPhase />}

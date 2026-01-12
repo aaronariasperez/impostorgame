@@ -9,6 +9,7 @@ interface GameStore extends GameState {
   // Game flow actions
   startGame: () => void;
   submitClue: (playerId: string, clue: string) => void;
+  moveToTurnStarter: () => void;
   moveToDiscussion: () => void;
   submitVote: (playerId: string, votedForId: string) => void;
   moveToResults: () => void;
@@ -16,6 +17,7 @@ interface GameStore extends GameState {
 
   // Utility
   getCurrentCluePlayer: () => Player | null;
+  getTurnStarterPlayer: () => Player | null;
   getActivePlayers: () => Player[];
   getImpostors: () => Player[];
   getCivilians: () => Player[];
@@ -30,6 +32,7 @@ const initialState: GameState = {
   currentCluePlayerIndex: 0,
   round: 1,
   votingResults: {},
+  turnStarterId: undefined,
 };
 
 // Load saved player names from localStorage
@@ -132,14 +135,24 @@ export const useGameState = create<GameStore>((set, get) => ({
     const activePlayers = state.getActivePlayers();
     const currentPlayerIndex = activePlayers.findIndex((p) => p.id === playerId);
 
-    // Move to next player or to discussion
+    // Move to next player or to turn starter
     if (currentPlayerIndex === activePlayers.length - 1) {
-      // All players have seen their role, move to discussion
-      set({ phase: 'discussion' });
+      // All players have seen their role, move to turn starter
+      const randomIndex = Math.floor(Math.random() * activePlayers.length);
+      const turnStarterId = activePlayers[randomIndex].id;
+      set({ phase: 'turn-starter', turnStarterId });
     } else {
       // Move to next player
       set({ currentCluePlayerIndex: currentPlayerIndex + 1 });
     }
+  },
+
+  moveToTurnStarter: () => {
+    const state = get();
+    const activePlayers = state.getActivePlayers();
+    const randomIndex = Math.floor(Math.random() * activePlayers.length);
+    const turnStarterId = activePlayers[randomIndex].id;
+    set({ phase: 'turn-starter', turnStarterId });
   },
 
   moveToDiscussion: () => {
@@ -184,6 +197,11 @@ export const useGameState = create<GameStore>((set, get) => ({
     const state = get();
     const activePlayers = state.getActivePlayers();
     return activePlayers[state.currentCluePlayerIndex] || null;
+  },
+
+  getTurnStarterPlayer: () => {
+    const state = get();
+    return state.players.find((p) => p.id === state.turnStarterId) || null;
   },
 
   getActivePlayers: () => {
