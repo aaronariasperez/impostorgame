@@ -166,16 +166,25 @@ Vercel (serves frontend)
     ↓
 User clicks "Load Word Packs"
     ↓
-Browser calls /api/word-packs
+Browser calls /api/word-packs (relative URL)
     ↓
 Vercel rewrites to https://impostor-backend.onrender.com/api/word-packs
     ↓
-Render (backend responds)
+Render (backend responds with data from Firebase)
     ↓
 Frontend displays word packs
 ```
 
 The `vercel.json` file handles the rewrite automatically, so no CORS issues!
+
+### Why This Works
+
+- **Frontend** uses relative URLs (`/api/*`) for all API calls
+- **Vercel** automatically rewrites these to the backend URL
+- **Backend** receives the request and responds with data from Firestore
+- **No CORS issues** because the request appears to come from the same domain
+
+See `PRODUCTION_URLS.md` for detailed configuration information.
 
 ---
 

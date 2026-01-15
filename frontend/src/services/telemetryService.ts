@@ -1,5 +1,3 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-
 // Get or create session ID
 function getSessionId(): string {
   try {
@@ -26,13 +24,13 @@ export async function logVisit() {
     };
 
     const ok = navigator.sendBeacon(
-      `${API_URL}/api/telemetry/visit`,
+      '/api/telemetry/visit',
       new Blob([JSON.stringify(payload)], { type: 'application/json' })
     );
 
     // Fallback if sendBeacon fails
     if (!ok) {
-      fetch(`${API_URL}/api/telemetry/visit`, {
+      fetch('/api/telemetry/visit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -56,7 +54,7 @@ export async function logGameEvent(
       data,
     };
 
-    fetch(`${API_URL}/api/telemetry/event`, {
+    fetch('/api/telemetry/event', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
