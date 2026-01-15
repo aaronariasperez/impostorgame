@@ -134,7 +134,10 @@ export default function GameSetup() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <div className="text-white text-xl">Cargando paquetes de palabras...</div>
+        <div className="text-white text-xl">
+          <div>Cargando paquetes de palabras...</div>
+          <div className="text-sm mt-2">(Aplicación durmiendo, puede tardar unos 40seg en despertar)</div>
+        </div>
       </div>
     );
   }
