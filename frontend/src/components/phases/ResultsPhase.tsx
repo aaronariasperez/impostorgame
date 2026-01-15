@@ -5,13 +5,10 @@ export default function ResultsPhase() {
   const getImpostors = useGameState((state) => state.getImpostors);
   const getCivilians = useGameState((state) => state.getCivilians);
   const round = useGameState((state) => state.round);
-  const players = useGameState((state) => state.players);
 
   const impostors = getImpostors();
   const civilians = getCivilians();
   
-  // Count total impostors at game start (including eliminated ones)
-  const totalImpostors = players.filter((p) => p.role === 'impostor').length;
 
   const handleContinue = () => {
     // Check win conditions

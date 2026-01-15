@@ -5,7 +5,6 @@ export default function VotingPhase() {
   const [selectedPlayer, setSelectedPlayer] = useState<string | null>(null);
 
   const getActivePlayers = useGameState((state) => state.getActivePlayers);
-  const moveToResults = useGameState((state) => state.moveToResults);
 
   const activePlayers = getActivePlayers();
 
