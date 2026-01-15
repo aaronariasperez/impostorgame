@@ -4,8 +4,11 @@
 
 Your code is configured and ready to deploy:
 - ✅ `frontend/vercel.json` - Rewrites `/api` to backend
+- ✅ `frontend/src/services/telemetryService.ts` - Uses relative URLs
+- ✅ `frontend/src/services/wordPackService.ts` - Uses relative URLs
 - ✅ `backend/src/main.ts` - CORS configured for production
 - ✅ `backend/.env.example` - Environment variables documented
+- ✅ `frontend/.env.example` - Frontend env variables documented
 - ✅ All code pushed to GitHub
 
 ---
