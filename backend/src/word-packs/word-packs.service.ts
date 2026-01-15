@@ -79,4 +79,45 @@ export class WordPacksService {
       wordItems: pack.wordItems,
     };
   }
+
+  getPacksByIds(ids: string[]): WordPack | null {
+    if (!ids || ids.length === 0) {
+      return null;
+    }
+
+    // Get all requested packs
+    const requestedPacks = ids
+      .map((id) => this.wordPacks.find((pack) => pack.id === id))
+      .filter((pack) => pack !== undefined) as WordPack[];
+
+    if (requestedPacks.length === 0) {
+      return null;
+    }
+
+    // Combine all words and wordItems
+    const combinedWords: string[] = [];
+    const combinedWordItems: WordItem[] = [];
+
+    requestedPacks.forEach((pack) => {
+      if (pack.words) {
+        combinedWords.push(...pack.words);
+      }
+      if (pack.wordItems) {
+        combinedWordItems.push(...pack.wordItems);
+      }
+    });
+
+    // Create a combined pack
+    const combinedName = requestedPacks.map((p) => p.name).join(' + ');
+    const combinedDescription = `Combinación de: ${requestedPacks.map((p) => p.name).join(', ')}`;
+
+    return {
+      id: ids.join(','),
+      name: combinedName,
+      description: combinedDescription,
+      language: requestedPacks[0].language,
+      words: combinedWords,
+      wordItems: combinedWordItems,
+    };
+  }
 }
