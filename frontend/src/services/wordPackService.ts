@@ -18,4 +18,16 @@ export const wordPackService = {
     }
     return response.json();
   },
+
+  async getCombinedPacks(ids: string[]): Promise<WordPack> {
+    if (!ids || ids.length === 0) {
+      throw new Error('At least one word pack must be selected');
+    }
+    const idsQuery = ids.join(',');
+    const response = await fetch(`${API_URL}/combined?ids=${idsQuery}`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch combined word packs: ${ids.join(', ')}`);
+    }
+    return response.json();
+  },
 };

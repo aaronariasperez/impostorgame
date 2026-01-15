@@ -1,4 +1,4 @@
-import { Controller, Get, Param, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Param, Query, NotFoundException } from '@nestjs/common';
 import { WordPacksService, WordPack } from './word-packs.service';
 
 @Controller('api/word-packs')
@@ -8,6 +8,16 @@ export class WordPacksController {
   @Get()
   getAllPacks(): Partial<WordPack>[] {
     return this.wordPacksService.getAllPacks();
+  }
+
+  @Get('combined')
+  getCombinedPacks(@Query('ids') ids: string): WordPack {
+    const idArray = ids.split(',').filter((id) => id.trim());
+    const pack = this.wordPacksService.getPacksByIds(idArray);
+    if (!pack) {
+      throw new NotFoundException(`No valid word packs found for ids: ${ids}`);
+    }
+    return pack;
   }
 
   @Get(':id')

@@ -11,6 +11,7 @@ export default function GameSetup() {
     Array.from({ length: 3 }, (_, i) => `Jugador ${i + 1}`)
   );
   const [wordPacks, setWordPacks] = useState<WordPack[]>([]);
+  const [selectedPackIds, setSelectedPackIds] = useState<string[]>([]);
   const [selectedPack, setSelectedPack] = useState<WordPack | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -40,6 +41,7 @@ export default function GameSetup() {
       try {
         const packs = await wordPackService.getAllPacks();
         setWordPacks(packs);
+        setSelectedPackIds([]);
         setSelectedPack(null);
       } catch (err) {
         setError('Error al cargar los paquetes de palabras');
@@ -59,13 +61,30 @@ export default function GameSetup() {
     setPlayerNames(loadSavedPlayerNames(playerCount));
   }, [playerCount]);
 
-  const handleSelectPack = async (packId: string) => {
+  const handleTogglePack = async (packId: string) => {
+    const newSelectedIds = selectedPackIds.includes(packId)
+      ? selectedPackIds.filter((id) => id !== packId)
+      : [...selectedPackIds, packId];
+
+    setSelectedPackIds(newSelectedIds);
+
+    if (newSelectedIds.length === 0) {
+      setSelectedPack(null);
+      return;
+    }
+
     try {
-      const pack = await wordPackService.getPackById(packId);
-      setSelectedPack(pack);
+      if (newSelectedIds.length === 1) {
+        const pack = await wordPackService.getPackById(newSelectedIds[0]);
+        setSelectedPack(pack);
+      } else {
+        const pack = await wordPackService.getCombinedPacks(newSelectedIds);
+        setSelectedPack(pack);
+      }
     } catch (err) {
-      setError('Error al cargar el paquete de palabras');
+      setError('Error al cargar los paquetes de palabras');
       console.error(err);
+      setSelectedPackIds(selectedPackIds);
     }
   };
 
@@ -191,27 +210,28 @@ export default function GameSetup() {
             </div>
           </div>
 
-          {/* Word Pack Selection */}
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Paquete de Palabras
-            </label>
-            <select
-              value={selectedPack?.id || ''}
-              onChange={(e) => handleSelectPack(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-            >
-              <option value="">Selecciona un paquete de palabras</option>
-              {wordPacks.map((pack) => (
-                <option key={pack.id} value={pack.id}>
-                  {pack.name}
-                </option>
-              ))}
-            </select>
-            {selectedPack && (
-              <p className="text-sm text-gray-600 mt-2">{selectedPack.description}</p>
-            )}
-          </div>
+           {/* Word Pack Selection */}
+           <div>
+             <label className="block text-sm font-semibold text-gray-700 mb-2">
+               Paquetes de Palabras (selecciona uno o más)
+             </label>
+             <div className="space-y-2 border border-gray-300 rounded-lg p-3 bg-gray-50">
+               {wordPacks.map((pack) => (
+                 <label key={pack.id} className="flex items-center cursor-pointer hover:bg-gray-100 p-2 rounded">
+                   <input
+                     type="checkbox"
+                     checked={selectedPackIds.includes(pack.id)}
+                     onChange={() => handleTogglePack(pack.id)}
+                     className="w-4 h-4 text-purple-600 rounded focus:ring-2 focus:ring-purple-500"
+                   />
+                   <span className="ml-3 text-gray-700">{pack.name}</span>
+                 </label>
+               ))}
+             </div>
+             {selectedPack && (
+               <p className="text-sm text-gray-600 mt-2">{selectedPack.description}</p>
+             )}
+           </div>
 
           {/* Start Button */}
           <button
