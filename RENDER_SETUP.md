@@ -38,8 +38,23 @@ Click **Add Environment Variable** for each:
 | `NODE_ENV` | `production` | Required |
 | `PORT` | `3000` | Required |
 | `FIREBASE_PROJECT_ID` | `impostor-16c49` | Your Firebase project ID |
-| `FIREBASE_SERVICE_ACCOUNT` | `./firebase-service-account.json` | Path to service account file |
+| `FIREBASE_SERVICE_ACCOUNT` | `{"type":"service_account",...}` | **Full JSON content** (see below) |
 | `FRONTEND_URL` | `https://impostor.vercel.app` | Update after Vercel deployment |
+
+### Important: FIREBASE_SERVICE_ACCOUNT Format
+
+In Render, you **must** use the full JSON content, not a file path.
+
+1. Open your `firebase-service-account.json` file locally
+2. Copy the **entire JSON content**
+3. In Render, paste it as the value for `FIREBASE_SERVICE_ACCOUNT`
+
+Example:
+```json
+{"type":"service_account","project_id":"impostor-16c49","private_key_id":"...","private_key":"-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n","client_email":"...","client_id":"...","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_x509_cert_url":"...","universe_domain":"googleapis.com"}
+```
+
+**Note**: Make sure the entire JSON is on one line (no line breaks)
 
 ### 5. Deploy
 
