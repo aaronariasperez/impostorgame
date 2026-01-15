@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import * as fs from 'fs';
-import * as path from 'path';
+import { FirebaseService } from '../firebase/firebase.service';
+import * as admin from 'firebase-admin';
 
 export interface WordItem {
   word: string;
@@ -19,66 +19,51 @@ export interface WordPack {
 @Injectable()
 export class WordPacksService {
   private wordPacks: WordPack[] = [];
+  private db: admin.firestore.Firestore;
 
-  constructor() {
-    this.loadWordPacksFromFiles();
+  constructor(private firebaseService: FirebaseService) {
+    this.db = firebaseService.getFirestore();
+    this.loadWordPacksFromFirebase();
   }
 
-  private loadWordPacksFromFiles(): void {
-    const wordPacksDir = path.join(process.cwd(), 'word_packs');
-
+  private async loadWordPacksFromFirebase(): Promise<void> {
     try {
-      if (!fs.existsSync(wordPacksDir)) {
-        console.warn(`Word packs directory not found: ${wordPacksDir}`);
-        return;
-      }
+      const snapshot = await this.db.collection('word_packs').get();
 
-      const files = fs.readdirSync(wordPacksDir).filter((file) =>
-        file.endsWith('.json')
-      );
+      this.wordPacks = [];
 
-      files.forEach((file) => {
-        try {
-          const filePath = path.join(wordPacksDir, file);
-          const fileContent = fs.readFileSync(filePath, 'utf-8');
-          const data = JSON.parse(fileContent);
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const wordItems: WordItem[] = (data.wordItems || []).map(
+          (item: any) => ({
+            word: item.word,
+            attributes: item.attributes || [],
+          }),
+        );
 
-          // Extract category name from filename (without .json)
-          const categoryName = file.replace('.json', '');
-          const categoryId = categoryName.toLowerCase();
+        const words = wordItems.map((item) => item.word);
 
-          // Extract words and attributes
-          const wordItems: WordItem[] = data.map((item: any) => ({
-            word: item.p,
-            attributes: item.a || [],
-          }));
-
-          const words = wordItems.map((item) => item.word);
-
-          this.wordPacks.push({
-            id: categoryId,
-            name: categoryName,
-            description: `Palabras relacionadas con ${categoryName.toLowerCase()}`,
-            language: 'es',
-            words,
-            wordItems,
-          });
-        } catch (error) {
-          console.error(`Error loading word pack from ${file}:`, error);
-        }
+        this.wordPacks.push({
+          id: doc.id,
+          name: data.name,
+          description: data.description,
+          language: data.language || 'es',
+          words,
+          wordItems,
+        });
       });
 
-      console.log(`Loaded ${this.wordPacks.length} word packs from files`);
+      console.log(`Loaded ${this.wordPacks.length} word packs from Firebase`);
     } catch (error) {
-      console.error('Error loading word packs directory:', error);
+      console.error('Error loading word packs from Firebase:', error);
     }
   }
 
-  getAllPacks(): WordPack[] {
+  getAllPacks(): Partial<WordPack>[] {
     return this.wordPacks.map((pack) => ({
       ...pack,
-      words: [], // Don't send words in list endpoint
-      wordItems: undefined, // Don't send word items in list endpoint
+      words: [],
+      wordItems: undefined,
     }));
   }
 
@@ -88,7 +73,6 @@ export class WordPacksService {
       return null;
     }
 
-    // Return pack with words and wordItems for full details
     return {
       ...pack,
       words: pack.words,

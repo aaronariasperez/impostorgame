@@ -1,23 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { promises as fs } from 'fs';
-import * as path from 'path';
+import { FirebaseService } from '../firebase/firebase.service';
+import * as admin from 'firebase-admin';
 
 @Injectable()
 export class TelemetryService {
-  private logsDir = path.join(process.cwd(), 'logs');
-  private visitsFile = path.join(this.logsDir, 'telemetry-visits.jsonl');
-  private eventsFile = path.join(this.logsDir, 'telemetry-events.jsonl');
+  private db: admin.firestore.Firestore;
 
-  constructor() {
-    this.ensureLogsDir();
-  }
-
-  private async ensureLogsDir() {
-    try {
-      await fs.mkdir(this.logsDir, { recursive: true });
-    } catch (error) {
-      console.error('Error creating logs directory:', error);
-    }
+  constructor(private firebaseService: FirebaseService) {
+    this.db = firebaseService.getFirestore();
   }
 
   async logVisit(payload: any) {
@@ -32,9 +22,9 @@ export class TelemetryService {
         timestamp: payload.ts,
       };
 
-      await fs.appendFile(this.visitsFile, JSON.stringify(entry) + '\n', 'utf8');
+      await this.db.collection('telemetry_visits').add(entry);
     } catch (error) {
-      console.error('Error logging visit:', error);
+      console.error('Error logging visit to Firebase:', error);
     }
   }
 
@@ -47,9 +37,9 @@ export class TelemetryService {
         eventData: payload.data || {},
       };
 
-      await fs.appendFile(this.eventsFile, JSON.stringify(entry) + '\n', 'utf8');
+      await this.db.collection('telemetry_events').add(entry);
     } catch (error) {
-      console.error('Error logging event:', error);
+      console.error('Error logging event to Firebase:', error);
     }
   }
 }
