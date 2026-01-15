@@ -60,7 +60,7 @@ const savePlayerNames = (players: Player[]) => {
 
 export const useGameState = create<GameStore>((set, get) => ({
   ...initialState,
-  initializeGame: (playerCount, impostorCount, civilianWord, impostorWord, wordItems) => {
+  initializeGame: (playerCount, impostorCount, civilianWord, _impostorWord, wordItems) => {
     const players: Player[] = [];
     const roles: PlayerRole[] = [];
     const savedNames = loadSavedPlayerNames();
@@ -130,7 +130,7 @@ export const useGameState = create<GameStore>((set, get) => ({
     set({ phase: 'clue', currentCluePlayerIndex: 0 });
   },
 
-  submitClue: (playerId, clue) => {
+   submitClue: (playerId, _clue) => {
     const state = get();
     const activePlayers = state.getActivePlayers();
     const currentPlayerIndex = activePlayers.findIndex((p) => p.id === playerId);
