@@ -11,6 +11,7 @@
     "mobile:build": "npm run build && npx cap copy",
     "mobile:ios": "npm run mobile:build && npx cap open ios",
     "mobile:android": "npm run mobile:build && npx cap open android",
+    "mobile:apk": "npm run build && npx cap copy android && cd android && ./gradlew assembleDebug && cd ..",
     "mobile:sync": "npx cap sync",
     "mobile:update": "npx cap update"
   },
