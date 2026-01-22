@@ -5,7 +5,7 @@ const isNative = Capacitor.isNativePlatform();
 
 // For native apps, use Render backend; for web, use relative URLs
 const API_BASE = isNative 
-  ? 'https://impostor-backend.onrender.com' 
+  ? 'https://impostorgame-1.onrender.com' 
   : '';
 
 const API_URL = `${API_BASE}/api/word-packs`;

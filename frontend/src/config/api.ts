@@ -4,7 +4,7 @@ const isNative = Capacitor.isNativePlatform();
 
 // For native apps, use Render backend; for web, use relative URLs
 export const API_BASE_URL = isNative
-  ? 'https://impostor-backend.onrender.com'
+  ? 'https://impostorgame-1.onrender.com'
   : '';
 
 export const getApiUrl = (endpoint: string): string => {
