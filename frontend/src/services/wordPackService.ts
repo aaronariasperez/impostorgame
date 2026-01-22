@@ -1,6 +1,9 @@
 import { WordPack } from '@/types/game';
+import { Capacitor } from '@capacitor/core';
 
-const API_URL = '/api/word-packs';
+const isNative = Capacitor.isNativePlatform();
+const API_BASE = isNative ? 'http://localhost:3000' : '';
+const API_URL = `${API_BASE}/api/word-packs`;
 
 export const wordPackService = {
   async getAllPacks(): Promise<WordPack[]> {
