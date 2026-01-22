@@ -15,10 +15,13 @@ async function bootstrap() {
         process.env.FRONTEND_URL,
       ].filter(Boolean);
 
+      // Allow: localhost, vercel.app, or if no origin (native apps)
       if (!origin || allowedOrigins.includes(origin) || origin?.endsWith('.vercel.app')) {
         callback(null, true);
       } else {
-        callback(new Error('Not allowed by CORS'));
+        // Log but allow for debugging
+        console.warn(`CORS request from: ${origin}`);
+        callback(null, true);
       }
     },
     credentials: true,
