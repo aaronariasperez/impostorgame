@@ -2,7 +2,12 @@ import { WordPack } from '@/types/game';
 import { Capacitor } from '@capacitor/core';
 
 const isNative = Capacitor.isNativePlatform();
-const API_BASE = isNative ? 'http://localhost:3000' : '';
+
+// For native apps, use Render backend; for web, use relative URLs
+const API_BASE = isNative 
+  ? 'https://impostor-backend.onrender.com' 
+  : '';
+
 const API_URL = `${API_BASE}/api/word-packs`;
 
 export const wordPackService = {

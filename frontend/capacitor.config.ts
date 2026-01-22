@@ -17,3 +17,9 @@ const config: CapacitorConfig = {
 };
 
 export default config;
+
+// Backend API configuration for native apps
+export const API_CONFIG = {
+  // Change this to your Render backend URL
+  baseUrl: 'https://impostor-backend.onrender.com',
+};
