@@ -61,7 +61,7 @@ export default function GameSetup() {
     setPlayerNames(loadSavedPlayerNames(playerCount));
   }, [playerCount]);
 
-  const handleTogglePack = async (packId: string) => {
+  const handleTogglePack = (packId: string) => {
     const newSelectedIds = selectedPackIds.includes(packId)
       ? selectedPackIds.filter((id) => id !== packId)
       : [...selectedPackIds, packId];
@@ -73,18 +73,24 @@ export default function GameSetup() {
       return;
     }
 
-    try {
-      if (newSelectedIds.length === 1) {
-        const pack = await wordPackService.getPackById(newSelectedIds[0]);
-        setSelectedPack(pack);
-      } else {
-        const pack = await wordPackService.getCombinedPacks(newSelectedIds);
-        setSelectedPack(pack);
-      }
-    } catch (err) {
-      setError('Error al cargar los paquetes de palabras');
-      console.error(err);
-      setSelectedPackIds(selectedPackIds);
+    const selectedPacks = wordPacks.filter((pack) =>
+      newSelectedIds.includes(pack.id)
+    );
+
+    if (selectedPacks.length > 0) {
+      const packNames = selectedPacks.map((p) => p.name).join(' + ');
+      const packDescription =
+        selectedPacks.length === 1
+          ? selectedPacks[0].description
+          : `Combinación de: ${selectedPacks.map((p) => p.name).join(', ')}`;
+
+      setSelectedPack({
+        id: newSelectedIds.join(','),
+        name: packNames,
+        description: packDescription,
+        language: selectedPacks[0].language || 'es',
+        words: [],
+      });
     }
   };
 
@@ -104,31 +110,37 @@ export default function GameSetup() {
     }
   };
 
-  const handleStartGame = () => {
-    if (!selectedPack?.words || selectedPack.words.length < 1) {
-      setError('Paquete de palabras inválido');
+  const handleStartGame = async () => {
+    if (!selectedPackIds || selectedPackIds.length === 0) {
+      setError('Debes seleccionar al menos un paquete');
       return;
     }
 
-    const shuffledWords = [...selectedPack.words].sort(() => Math.random() - 0.5);
-    const civilianWord = shuffledWords[0];
+    try {
+      setLoading(true);
+      const { civilianWord, impostorHint } = await wordPackService.getSelection(
+        selectedPackIds
+      );
 
-    initializeGame(playerCount, impostorCount, civilianWord, '', selectedPack.wordItems);
+      initializeGame(playerCount, impostorCount, civilianWord, impostorHint);
 
-    // Set player names
-    for (let i = 0; i < playerCount; i++) {
-      setPlayerName(`player-${i}`, playerNames[i]);
+      for (let i = 0; i < playerCount; i++) {
+        setPlayerName(`player-${i}`, playerNames[i]);
+      }
+
+      logGameEvent('game_start', {
+        playerCount,
+        impostorCount,
+        wordPackIds: selectedPackIds,
+      });
+
+      startGame();
+    } catch (err) {
+      setError('Error al iniciar la partida. Intenta de nuevo.');
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
-
-    // Log game start event
-    logGameEvent('game_start', {
-      playerCount,
-      impostorCount,
-      wordPack: selectedPack.name,
-      playerNames,
-    });
-
-    startGame();
   };
 
   if (loading) {
