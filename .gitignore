@@ -45,3 +45,6 @@ firebase-service-account.json
 frontend/ios/
 frontend/android/
 frontend/capacitor.config.json
+
+# Refact knowledge
+.refact_knowledge

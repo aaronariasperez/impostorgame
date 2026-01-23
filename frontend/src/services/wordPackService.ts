@@ -10,9 +10,20 @@ const API_BASE = isNative
 
 const API_URL = `${API_BASE}/api/word-packs`;
 
+// Set to true to simulate slow backend responses for testing loading screens
+const SIMULATE_DELAY = false;
+const DELAY_MS = 5000; // 5 seconds
+
+const simulateDelay = async () => {
+  if (SIMULATE_DELAY) {
+    await new Promise(resolve => setTimeout(resolve, DELAY_MS));
+  }
+};
+
 export const wordPackService = {
   async getAllPacks(): Promise<WordPack[]> {
     try {
+      await simulateDelay();
       const response = await fetch(API_URL);
       if (!response.ok) {
         throw new Error('Failed to fetch word packs');
@@ -36,6 +47,7 @@ export const wordPackService = {
     }
 
     try {
+      await simulateDelay();
       const response = await fetch(`${API_URL}/selection`, {
         method: 'POST',
         headers: {

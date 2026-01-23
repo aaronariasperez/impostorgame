@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useGameState } from '@/hooks/useGameState';
 import Timer from '@/components/Timer';
+import LoadingScreen from '@/components/LoadingScreen';
 
 export default function CluePhase() {
   const [timeLeft, setTimeLeft] = useState(240); // 4 minutes
@@ -94,11 +95,7 @@ export default function CluePhase() {
   };
 
   if (!currentCluePlayer) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-white text-xl">Cargando...</div>
-      </div>
-    );
+    return <LoadingScreen message="Preparando turno..." />;
   }
 
   const isCivilian = currentCluePlayer.role === 'civilian';

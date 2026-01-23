@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useGameState } from '@/hooks/useGameState';
 import { wordPackService } from '@/services/wordPackService';
 import { logGameEvent } from '@/services/telemetryService';
+import LoadingScreen from '@/components/LoadingScreen';
 import { WordPack } from '@/types/game';
 
 export default function GameSetup() {
@@ -145,12 +146,10 @@ export default function GameSetup() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-white text-xl">
-          <div>Cargando paquetes de palabras...</div>
-          <div className="text-sm mt-2">(Aplicación durmiendo, puede tardar unos 40seg en despertar)</div>
-        </div>
-      </div>
+      <LoadingScreen
+        message="Cargando paquetes de palabras..."
+        subMessage="Servidor durmiendo, despertando... (puede tardar maximo 2 minutos)"
+      />
     );
   }
 
