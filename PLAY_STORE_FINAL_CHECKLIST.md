@@ -1,7 +1,7 @@
 # Play Store Final Checklist - Impostor Game
 
-**Status:** 80% Ready for Submission
-**Last Updated:** January 23, 2026
+**Status:** 85% Ready for Submission
+**Last Updated:** January 26, 2026
 
 ---
 
@@ -19,11 +19,13 @@
 - ✅ No runtime errors
 
 ### Documentation
-- ✅ Privacy Policy created
+- ✅ Privacy Policy created (updated for Firebase)
 - ✅ Terms of Service created
-- ✅ Data Safety Form prepared
+- ✅ Data Safety Form prepared (updated for Firebase)
 - ✅ Security improvements documented
 - ✅ Testing procedures documented
+- ✅ Word packs migrated to Firebase
+- ✅ Git history cleaned (word packs removed)
 
 ---
 
@@ -122,18 +124,24 @@ to identify the impostor among them. Perfect for groups and parties!
 Features:
 - Local multiplayer (all players on one device)
 - Configurable number of impostors
-- Multiple word pack categories
+- 2 word pack categories: Pack Fácil (Easy) & Pack Difícil (Hard)
 - Offline support (works without internet)
 - Fast-paced gameplay (15-30 minutes per game)
 - No ads or in-app purchases
+- Cloud-synced word packs (Firebase)
 
 How to Play:
 1. Select number of players and impostors
-2. Choose a word pack
-3. Each player gets a secret word (impostors get a hint)
+2. Choose a word pack (Easy or Hard difficulty)
+3. Each player gets a secret word (impostors get a specific hint)
 4. Players give clues about their word
 5. Vote to eliminate the impostor
 6. If impostor is eliminated, they get one chance to guess the word
+
+Word Packs:
+- Pack Fácil (Easy): 202 words with simple hints - perfect for beginners
+- Pack Difícil (Hard): 202 words with challenging hints - for experienced players
+- All packs are cloud-synced and updated automatically
 
 Privacy:
 - No personal data collected
@@ -374,6 +382,17 @@ Your submission is ready when:
 
 ---
 
-**Document Version:** 1.0
-**Last Updated:** January 23, 2026
+**Document Version:** 1.1
+**Last Updated:** January 26, 2026
 **Next Review:** After submission
+
+---
+
+## 📝 Recent Updates (v1.1)
+
+- ✅ Updated for Firebase word pack management
+- ✅ Updated description to reflect 2 word packs (Pack Fácil & Pack Difícil)
+- ✅ Updated Privacy Policy with Firebase details
+- ✅ Updated Data Safety Form with Firebase information
+- ✅ Removed word packs from git history
+- ✅ Updated UI with new image_portada.png

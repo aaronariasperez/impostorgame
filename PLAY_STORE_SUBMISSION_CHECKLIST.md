@@ -1,16 +1,16 @@
 # Play Store Submission Checklist - Impostor Game
 
-**Status:** Ready for Submission
-**Last Updated:** January 23, 2026
+**Status:** Ready for Submission (Updated)
+**Last Updated:** January 26, 2026
 
 ---
 
 ## 📋 Pre-Submission Requirements
 
 ### Legal Documents
-- [x] Privacy Policy created (`PRIVACY_POLICY.md`)
+- [x] Privacy Policy created (`PRIVACY_POLICY.md`) - Updated for Firebase
 - [x] Terms of Service created (`TERMS_OF_SERVICE.md`)
-- [x] Data Safety Form prepared (`DATA_SAFETY_FORM.md`)
+- [x] Data Safety Form prepared (`DATA_SAFETY_FORM.md`) - Updated for Firebase
 - [ ] Privacy Policy linked in app settings
 - [ ] Terms of Service linked in app settings
 - [ ] Email address updated in all documents
@@ -161,7 +161,7 @@ Complete in Google Play Console:
 - [ ] Remove unnecessary permissions
 
 **Expected Permissions:**
-- Internet (required for word packs)
+- Internet (required for Firebase word pack sync)
 - Network state (for offline detection)
 
 ---
@@ -171,13 +171,14 @@ Complete in Google Play Console:
 ### Functional Testing
 - [ ] App launches without crashes
 - [ ] Game setup works correctly
-- [ ] Word packs download successfully
+- [ ] Word packs (Pack Fácil & Pack Difícil) download successfully from Firebase
 - [ ] Game flow works end-to-end
 - [ ] Voting system works
 - [ ] Results display correctly
 - [ ] Offline mode works after first load
 - [ ] Cache expires after 7 days
 - [ ] Rate limiting prevents abuse
+- [ ] Hints (p2) display correctly for impostors
 
 ### Device Testing
 - [ ] Test on Android 8.0+ devices
@@ -390,6 +391,17 @@ Your app is ready for submission when:
 
 ---
 
-**Document Version:** 1.0
-**Last Updated:** January 23, 2026
+**Document Version:** 1.1
+**Last Updated:** January 26, 2026
 **Status:** Ready for Submission
+
+---
+
+## 📝 Recent Updates (v1.1)
+
+- ✅ Updated for Firebase word pack management
+- ✅ Updated Privacy Policy with Firebase details
+- ✅ Updated Data Safety Form with Firebase information
+- ✅ Updated testing checklist for Firebase sync
+- ✅ Removed word packs from git history
+- ✅ Updated UI with new image_portada.png

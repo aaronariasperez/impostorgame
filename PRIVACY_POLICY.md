@@ -1,6 +1,6 @@
 # Privacy Policy - Impostor Game
 
-**Last Updated:** January 23, 2026
+**Last Updated:** January 26, 2026
 
 ## 1. Introduction
 
@@ -15,7 +15,7 @@ Please read this Privacy Policy carefully. If you do not agree with our policies
 **Game Setup Information:**
 - Number of players
 - Number of impostors
-- Selected word pack categories
+- Selected word pack (Pack Fácil or Pack Difícil)
 
 **Note:** We do NOT collect player names or personal identifiers.
 
@@ -34,8 +34,14 @@ Please read this Privacy Policy carefully. If you do not agree with our policies
 - Timestamp of events
 - IP address (for rate limiting purposes only)
 
+**Cloud Storage (Firebase):**
+- Word packs are stored in Firebase Firestore
+- Word packs are downloaded and cached locally on your device for offline functionality
+- Local cache expires after 7 days
+- Firebase is a Google service that complies with GDPR and CCPA
+
 **Local Storage:**
-- Downloaded word packs are cached locally on your device for offline functionality
+- Downloaded word packs are cached in your device's IndexedDB
 - Cache expires after 7 days
 
 ## 3. How We Use Your Information
@@ -88,15 +94,25 @@ We implement security measures to protect your information:
 
 However, no method of transmission over the Internet is 100% secure. While we strive to protect your information, we cannot guarantee absolute security.
 
-## 7. Offline Functionality
+## 7. Cloud & Offline Functionality
 
-The App includes offline-first functionality:
+The App includes cloud-synced and offline-first functionality:
 
-- Word packs are cached locally on your device
+**Cloud Storage:**
+- Word packs are stored in Firebase Firestore (Google's secure cloud database)
+- Word packs are automatically downloaded and cached on your device
+- No personal data is stored in the cloud
+
+**Offline Functionality:**
 - The game can be played without internet connection
 - Cache is stored in your device's local storage (IndexedDB)
 - Cache automatically expires after 7 days
 - You can clear cache anytime through your device settings
+
+**Firebase Privacy:**
+- Firebase is a Google service that complies with GDPR and CCPA
+- Firebase does not collect personal information from the app
+- Only word pack data is stored (no user data)
 
 ## 8. Children's Privacy
 
@@ -158,5 +174,5 @@ This App complies with:
 
 ---
 
-**Version:** 1.0
-**Effective Date:** January 23, 2026
+**Version:** 1.1
+**Effective Date:** January 26, 2026

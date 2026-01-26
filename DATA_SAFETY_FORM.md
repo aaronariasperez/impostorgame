@@ -30,7 +30,7 @@ This document provides the information required for the Google Play Store Data S
 | Field | Details |
 |-------|---------|
 | **Data Type** | Game Analytics |
-| **Examples** | Game events, word pack IDs, player count, impostor count, game outcomes |
+| **Examples** | Game events, word pack selection (Pack Fácil/Difícil), player count, impostor count, game outcomes, hint usage |
 | **Collected** | Yes |
 | **Shared** | No |
 | **Retention** | 30 days |
@@ -76,6 +76,7 @@ This document provides the information required for the Google Play Store Data S
 - We do NOT share data with analytics companies (Firebase is used internally only)
 - We do NOT sell user data
 - We do NOT share data with any external services
+- Firebase is used only for storing word pack data (not user data)
 
 ---
 
@@ -90,7 +91,8 @@ This document provides the information required for the Google Play Store Data S
 
 **At Rest:**
 - ✅ Local cache stored in device's IndexedDB (browser-level encryption)
-- ✅ Backend data stored in Firebase (Google-managed encryption)
+- ✅ Word pack data stored in Firebase Firestore (Google-managed encryption)
+- ✅ Game analytics stored in Firebase (Google-managed encryption)
 - ✅ No sensitive data stored unencrypted
 
 ### 4.2 Security Measures
@@ -269,9 +271,10 @@ For questions about data practices:
 | Version | Date | Changes |
 |---------|------|---------|
 | 1.0 | 2026-01-23 | Initial version for Play Store submission |
+| 1.1 | 2026-01-26 | Updated for Firebase word pack management |
 
 ---
 
-**Document Version:** 1.0
-**Last Updated:** January 23, 2026
+**Document Version:** 1.1
+**Last Updated:** January 26, 2026
 **Status:** Ready for Play Store Submission

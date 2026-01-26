@@ -1,7 +1,7 @@
 # Play Store Submission - Complete Summary
 
-**Status:** 🟡 80% Ready
-**Last Updated:** January 23, 2026
+**Status:** 🟢 85% Ready
+**Last Updated:** January 26, 2026
 
 ---
 
@@ -252,6 +252,8 @@ LIVE (Jan 26-28)
 | Data Retention | 30 days | ✅ Compliant |
 | Cache TTL | 7 days | ✅ Efficient |
 | Rate Limit | 30 req/min | ✅ Protected |
+| Word Packs | 2 (Firebase) | ✅ Optimized |
+| Hints System | Fixed (p2) | ✅ Consistent |
 
 ---
 
@@ -275,19 +277,25 @@ to identify the impostor among them. Perfect for groups and parties!
 FEATURES:
 • Local multiplayer (all players on one device)
 • Configurable number of impostors
-• Multiple word pack categories
+• 2 word pack categories: Pack Fácil (Easy) & Pack Difícil (Hard)
 • Offline support (works without internet)
 • Fast-paced gameplay (15-30 minutes per game)
 • No ads or in-app purchases
 • Privacy-focused (no personal data collection)
+• Cloud-synced word packs (Firebase)
 
 HOW TO PLAY:
 1. Select number of players and impostors
-2. Choose a word pack category
-3. Each player gets a secret word (impostors get a hint)
+2. Choose a word pack (Easy or Hard difficulty)
+3. Each player gets a secret word (impostors get a specific hint)
 4. Players give clues about their word
 5. Vote to eliminate the impostor
 6. If impostor is eliminated, they get one chance to guess the word
+
+WORD PACKS:
+• Pack Fácil (Easy): 202 words with simple hints - perfect for beginners
+• Pack Difícil (Hard): 202 words with challenging hints - for experienced players
+• All packs are cloud-synced and updated automatically
 
 PRIVACY & SECURITY:
 • No personal data collected
