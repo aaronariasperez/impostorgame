@@ -9,15 +9,15 @@ export default function Timer({ timeLeft }: TimerProps) {
 
   return (
     <div className={`text-center mb-6 p-4 rounded-lg ${
-      isLowTime ? 'bg-red-100' : 'bg-blue-100'
+      isLowTime ? 'bg-red-900' : 'bg-blue-900'
     }`}>
       <p className={`text-sm font-semibold ${
-        isLowTime ? 'text-red-700' : 'text-blue-700'
+        isLowTime ? 'text-red-300' : 'text-blue-300'
       } mb-1`}>
         Tiempo Restante
       </p>
       <p className={`text-4xl font-bold ${
-        isLowTime ? 'text-red-600' : 'text-blue-600'
+        isLowTime ? 'text-red-200' : 'text-blue-200'
       }`}>
         {minutes}:{seconds.toString().padStart(2, '0')}
       </p>

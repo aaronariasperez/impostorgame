@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useGameState } from '@/hooks/useGameState';
 import GameSetup from '@/pages/GameSetup';
 import GamePage from '@/pages/GamePage';
+import LoadingScreen from '@/components/LoadingScreen';
 import { logVisit } from '@/services/telemetryService';
 
 function App() {
@@ -12,6 +13,15 @@ function App() {
   useEffect(() => {
     // Simulate app initialization
     setIsLoading(false);
+    // Scroll to top on mount
+    window.scrollTo(0, 0);
+  }, []);
+
+  // Log visit on app mount (only once)
+  useEffect(() => {
+    if (visitLoggedRef.current) return;
+    visitLoggedRef.current = true;
+    logVisit();
   }, []);
 
   // Log visit on app mount (only once)
@@ -22,15 +32,11 @@ function App() {
   }, []);
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-purple-600 to-blue-600">
-        <div className="text-white text-2xl font-bold">Cargando...</div>
-      </div>
-    );
+    return <LoadingScreen message="Iniciando aplicación..." />;
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 to-blue-600">
+    <div className="fixed inset-0 overflow-auto bg-gradient-to-br from-gray-900 via-gray-800 to-black">
       {phase === 'setup' ? <GameSetup /> : <GamePage />}
     </div>
   );

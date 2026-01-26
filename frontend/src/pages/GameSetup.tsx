@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useGameState } from '@/hooks/useGameState';
 import { wordPackService } from '@/services/wordPackService';
 import { logGameEvent } from '@/services/telemetryService';
+import LoadingScreen from '@/components/LoadingScreen';
 import { WordPack } from '@/types/game';
 
 export default function GameSetup() {
@@ -40,7 +41,19 @@ export default function GameSetup() {
     const loadWordPacks = async () => {
       try {
         const packs = await wordPackService.getAllPacks();
-        setWordPacks(packs);
+        
+        // Sort packs: Pack facil first, then Pack dificil
+        const sortedPacks = packs.sort((a, b) => {
+          const order = ['pack facil', 'pack dificil'];
+          const aIndex = order.indexOf(a.id.toLowerCase());
+          const bIndex = order.indexOf(b.id.toLowerCase());
+          
+          if (aIndex === -1) return 1;
+          if (bIndex === -1) return -1;
+          return aIndex - bIndex;
+        });
+        
+        setWordPacks(sortedPacks);
         setSelectedPackIds([]);
         setSelectedPack(null);
       } catch (err) {
@@ -61,7 +74,7 @@ export default function GameSetup() {
     setPlayerNames(loadSavedPlayerNames(playerCount));
   }, [playerCount]);
 
-  const handleTogglePack = async (packId: string) => {
+  const handleTogglePack = (packId: string) => {
     const newSelectedIds = selectedPackIds.includes(packId)
       ? selectedPackIds.filter((id) => id !== packId)
       : [...selectedPackIds, packId];
@@ -73,18 +86,24 @@ export default function GameSetup() {
       return;
     }
 
-    try {
-      if (newSelectedIds.length === 1) {
-        const pack = await wordPackService.getPackById(newSelectedIds[0]);
-        setSelectedPack(pack);
-      } else {
-        const pack = await wordPackService.getCombinedPacks(newSelectedIds);
-        setSelectedPack(pack);
-      }
-    } catch (err) {
-      setError('Error al cargar los paquetes de palabras');
-      console.error(err);
-      setSelectedPackIds(selectedPackIds);
+    const selectedPacks = wordPacks.filter((pack) =>
+      newSelectedIds.includes(pack.id)
+    );
+
+    if (selectedPacks.length > 0) {
+      const packNames = selectedPacks.map((p) => p.name).join(' + ');
+      const packDescription =
+        selectedPacks.length === 1
+          ? selectedPacks[0].description
+          : `Combinación de: ${selectedPacks.map((p) => p.name).join(', ')}`;
+
+      setSelectedPack({
+        id: newSelectedIds.join(','),
+        name: packNames,
+        description: packDescription,
+        language: selectedPacks[0].language || 'es',
+        words: [],
+      });
     }
   };
 
@@ -104,62 +123,70 @@ export default function GameSetup() {
     }
   };
 
-  const handleStartGame = () => {
-    if (!selectedPack?.words || selectedPack.words.length < 1) {
-      setError('Paquete de palabras inválido');
+  const handleStartGame = async () => {
+    if (!selectedPackIds || selectedPackIds.length === 0) {
+      setError('Debes seleccionar al menos un paquete');
       return;
     }
 
-    const shuffledWords = [...selectedPack.words].sort(() => Math.random() - 0.5);
-    const civilianWord = shuffledWords[0];
+    try {
+      setLoading(true);
+      const { civilianWord, impostorHint } = await wordPackService.getSelection(
+        selectedPackIds
+      );
 
-    initializeGame(playerCount, impostorCount, civilianWord, '', selectedPack.wordItems);
+      initializeGame(playerCount, impostorCount, civilianWord, impostorHint);
 
-    // Set player names
-    for (let i = 0; i < playerCount; i++) {
-      setPlayerName(`player-${i}`, playerNames[i]);
+      for (let i = 0; i < playerCount; i++) {
+        setPlayerName(`player-${i}`, playerNames[i]);
+      }
+
+      logGameEvent('game_start', {
+        playerCount,
+        impostorCount,
+        wordPackIds: selectedPackIds,
+      });
+
+      startGame();
+    } catch (err) {
+      setError('Error al iniciar la partida. Intenta de nuevo.');
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
-
-    // Log game start event
-    logGameEvent('game_start', {
-      playerCount,
-      impostorCount,
-      wordPack: selectedPack.name,
-      playerNames,
-    });
-
-    startGame();
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-white text-xl">
-          <div>Cargando paquetes de palabras...</div>
-          <div className="text-sm mt-2">(Aplicación durmiendo, puede tardar unos 40seg en despertar)</div>
-        </div>
-      </div>
+      <LoadingScreen
+        message="Cargando paquetes de palabras..."
+        subMessage="Servidor durmiendo, despertando... (puede tardar maximo 2 minutos)"
+      />
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full">
-        <h1 className="text-4xl font-bold text-center mb-8 text-purple-600">
-          🎭 Impostor
-        </h1>
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+      <div className="bg-gray-800 rounded-lg shadow-2xl p-8 max-w-md w-full border border-gray-700">
+        <div className="flex justify-center mb-8">
+          <img 
+            src="/imagen_portada.png" 
+            alt="Impostor Game" 
+            className="w-full max-w-sm h-auto rounded-lg shadow-lg"
+          />
+        </div>
 
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {error}
-          </div>
-        )}
+{error && (
+           <div className="bg-red-900 border border-red-700 text-red-200 px-4 py-3 rounded mb-4">
+             {error}
+           </div>
+         )}
 
         <div className="space-y-6">
           {/* Player Count */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Número de Jugadores: {playerCount}
+<label className="block text-sm font-semibold text-gray-300 mb-2">
+               Número de Jugadores: {playerCount}
             </label>
             <input
               type="range"
@@ -177,8 +204,8 @@ export default function GameSetup() {
 
           {/* Impostor Count */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Número de Impostores: {impostorCount}
+<label className="block text-sm font-semibold text-gray-300 mb-2">
+               Número de Impostores: {impostorCount}
             </label>
             <input
               type="range"
@@ -196,8 +223,8 @@ export default function GameSetup() {
 
           {/* Player Names */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Nombres de Jugadores
+<label className="block text-sm font-semibold text-gray-300 mb-2">
+               Nombres de Jugadores
             </label>
             <div className="space-y-2 max-h-40 overflow-y-auto">
               {playerNames.map((name, index) => (
@@ -207,7 +234,7 @@ export default function GameSetup() {
                   value={name}
                   onChange={(e) => handlePlayerNameChange(index, e.target.value)}
                   placeholder={`Jugador ${index + 1}`}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+className="w-full px-4 py-2 border border-gray-600 rounded-lg bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500"
                 />
               ))}
             </div>
@@ -215,24 +242,24 @@ export default function GameSetup() {
 
            {/* Word Pack Selection */}
            <div>
-             <label className="block text-sm font-semibold text-gray-700 mb-2">
-               Paquetes de Palabras (selecciona uno o más)
+<label className="block text-sm font-semibold text-gray-300 mb-2">
+                Paquetes de Palabras (selecciona uno o más)
              </label>
-             <div className="space-y-2 border border-gray-300 rounded-lg p-3 bg-gray-50">
+<div className="space-y-2 border border-gray-600 rounded-lg p-3 bg-gray-700">
                {wordPacks.map((pack) => (
-                 <label key={pack.id} className="flex items-center cursor-pointer hover:bg-gray-100 p-2 rounded">
+<label key={pack.id} className="flex items-center cursor-pointer hover:bg-gray-600 p-2 rounded">
                    <input
                      type="checkbox"
                      checked={selectedPackIds.includes(pack.id)}
                      onChange={() => handleTogglePack(pack.id)}
-                     className="w-4 h-4 text-purple-600 rounded focus:ring-2 focus:ring-purple-500"
+className="w-4 h-4 text-gray-500 rounded focus:ring-2 focus:ring-gray-400"
                    />
-                   <span className="ml-3 text-gray-700">{pack.name}</span>
+<span className="ml-3 text-gray-300">{pack.name}</span>
                  </label>
                ))}
              </div>
              {selectedPack && (
-               <p className="text-sm text-gray-600 mt-2">{selectedPack.description}</p>
+<p className="text-sm text-gray-400 mt-2">{selectedPack.description}</p>
              )}
            </div>
 
@@ -240,10 +267,43 @@ export default function GameSetup() {
           <button
             onClick={handleStartGame}
             disabled={!selectedPack}
-            className="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white font-bold py-3 px-4 rounded-lg transition duration-200"
+className="w-full bg-gray-700 hover:bg-gray-600 disabled:bg-gray-500 text-white font-bold py-3 px-4 rounded-lg transition duration-200"
           >
             Comenzar Juego
           </button>
+
+          {/* Legal Links Footer */}
+<div className="flex justify-center gap-4 text-xs text-gray-400 mt-6 pt-4 border-t border-gray-700">
+            <a
+              href="https://raw.githubusercontent.com/aaronariasperez/impostorgame/feature/mobile/PRIVACY_POLICY.md"
+              target="_blank"
+              rel="noopener noreferrer"
+className="hover:text-gray-300 underline"
+            >
+              Política de Privacidad
+            </a>
+            <span>•</span>
+            <a
+              href="https://raw.githubusercontent.com/aaronariasperez/impostorgame/feature/mobile/TERMS_OF_SERVICE.md"
+              target="_blank"
+              rel="noopener noreferrer"
+className="hover:text-gray-300 underline"
+            >
+              Términos de Servicio
+            </a>
+          </div>
+
+          {/* Buy Me a Coffee Link */}
+          <div className="text-center mt-4">
+            <a
+              href="https://buymeacoffee.com/aaronarias"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block bg-yellow-600 hover:bg-yellow-500 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 text-sm"
+            >
+              ☕ ¿Me invitas a un café? (sin presión)
+            </a>
+          </div>
         </div>
       </div>
     </div>

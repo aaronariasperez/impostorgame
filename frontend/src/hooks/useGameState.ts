@@ -3,7 +3,7 @@ import { GameState, Player, PlayerRole } from '@/types/game';
 
 interface GameStore extends GameState {
   // Setup actions
-  initializeGame: (playerCount: number, impostorCount: number, civilianWord: string, impostorWord: string, wordItems?: any[]) => void;
+  initializeGame: (playerCount: number, impostorCount: number, civilianWord: string, impostorHint: string) => void;
   setPlayerName: (playerId: string, name: string) => void;
 
   // Game flow actions
@@ -60,12 +60,11 @@ const savePlayerNames = (players: Player[]) => {
 
 export const useGameState = create<GameStore>((set, get) => ({
   ...initialState,
-  initializeGame: (playerCount, impostorCount, civilianWord, _impostorWord, wordItems) => {
+  initializeGame: (playerCount, impostorCount, civilianWord, impostorHint) => {
     const players: Player[] = [];
     const roles: PlayerRole[] = [];
     const savedNames = loadSavedPlayerNames();
 
-    // Create roles array
     for (let i = 0; i < impostorCount; i++) {
       roles.push('impostor');
     }
@@ -73,25 +72,11 @@ export const useGameState = create<GameStore>((set, get) => ({
       roles.push('civilian');
     }
 
-    // Shuffle roles
     for (let i = roles.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [roles[i], roles[j]] = [roles[j], roles[i]];
     }
 
-    // Generate random hint for impostor from the CIVILIAN word's attributes
-    let impostorHint = '';
-    if (wordItems && wordItems.length > 0) {
-      // Find the word item that matches the civilian word
-      const civilianWordItem = wordItems.find((item: any) => item.word === civilianWord);
-      if (civilianWordItem && civilianWordItem.attributes && civilianWordItem.attributes.length > 0) {
-        // Select a random attribute from the civilian word
-        const randomAttribute = civilianWordItem.attributes[Math.floor(Math.random() * civilianWordItem.attributes.length)];
-        impostorHint = randomAttribute;
-      }
-    }
-
-    // Create players with saved names if available
     for (let i = 0; i < playerCount; i++) {
       const playerId = `player-${i}`;
       const savedName = savedNames[playerId];

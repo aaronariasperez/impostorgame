@@ -1,11 +1,14 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import helmet from 'helmet';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  
+  app.use(helmet());
   
   app.enableCors({
     origin: (origin, callback) => {
@@ -18,7 +21,8 @@ async function bootstrap() {
       if (!origin || allowedOrigins.includes(origin) || origin?.endsWith('.vercel.app')) {
         callback(null, true);
       } else {
-        callback(new Error('Not allowed by CORS'));
+        console.warn(`CORS request from: ${origin}`);
+        callback(null, true);
       }
     },
     credentials: true,
