@@ -86,14 +86,3 @@ export default function ResultsPhase() {
      </div>
    );
  }
-
-        <button
-          onClick={handleContinue}
-          className="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-lg transition duration-200"
-        >
-          Continuar
-        </button>
-      </div>
-    </div>
-  );
-}
