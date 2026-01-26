@@ -168,9 +168,13 @@ export default function GameSetup() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full">
-        <h1 className="text-4xl font-bold text-center mb-8 text-purple-600">
-          🎭 Impostor
-        </h1>
+        <div className="flex justify-center mb-8">
+          <img 
+            src="/imagen_portada.png" 
+            alt="Impostor Game" 
+            className="w-full max-w-sm h-auto rounded-lg shadow-lg"
+          />
+        </div>
 
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
