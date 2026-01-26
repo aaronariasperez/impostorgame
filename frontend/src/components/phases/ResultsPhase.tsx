@@ -34,46 +34,51 @@ export default function ResultsPhase() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full">
+<div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+       <div className="bg-gray-800 rounded-lg shadow-2xl p-8 max-w-md w-full border border-gray-700">
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
           📊 Resultados
         </h2>
 
         {eliminatedPlayer && (
-          <div className={`p-6 rounded-lg mb-6 text-center ${
-            eliminatedPlayer.role === 'impostor'
-              ? 'bg-red-100 border-2 border-red-400'
-              : 'bg-blue-100 border-2 border-blue-400'
-          }`}>
-            <p className="text-gray-700 font-semibold mb-2">Jugador Eliminado:</p>
-            <p className="text-2xl font-bold text-gray-800 mb-2">
-              {eliminatedPlayer.name}
-            </p>
-            <p className={`text-lg font-semibold ${
-              eliminatedPlayer.role === 'impostor'
-                ? 'text-red-600'
-                : 'text-blue-600'
-            }`}>
-              {eliminatedPlayer.role === 'impostor' ? '🎭 Impostor' : '👤 Civil'}
-            </p>
-          </div>
+{eliminatedPlayer && (
+           <div className={`p-6 rounded-lg mb-6 text-center ${
+             eliminatedPlayer.role === 'impostor'
+               ? 'bg-red-900 border-2 border-red-700'
+               : 'bg-blue-900 border-2 border-blue-700'
+           }`}>
+             <p className="text-gray-300 font-semibold mb-2">Jugador Eliminado:</p>
+             <p className="text-2xl font-bold text-white mb-2">
+               {eliminatedPlayer.name}
+             </p>
+             <p className={`text-lg font-semibold ${
+               eliminatedPlayer.role === 'impostor'
+                 ? 'text-red-300'
+                 : 'text-blue-300'
+             }`}>
+               {eliminatedPlayer.role === 'impostor' ? '🎭 Impostor' : '👤 Civil'}
+             </p>
+           </div>
+         )}
         )}
 
         <div className="space-y-4 mb-6">
           <div>
-            <h3 className="font-semibold text-gray-800 mb-2">Impostores Restantes: {impostors.length}</h3>
-            {impostors.map((p) => (
-              <p key={p.id} className="text-gray-600">• {p.name}</p>
-            ))}
-          </div>
+<div className="space-y-4 mb-6">
+           <div>
+             <h3 className="font-semibold text-white mb-2">Impostores Restantes: {impostors.length}</h3>
+             {impostors.map((p) => (
+               <p key={p.id} className="text-gray-300">• {p.name}</p>
+             ))}
+           </div>
 
-          <div>
-            <h3 className="font-semibold text-gray-800 mb-2">Civiles Restantes: {civilians.length}</h3>
-            {civilians.map((p) => (
-              <p key={p.id} className="text-gray-600">• {p.name}</p>
-            ))}
-          </div>
+           <div>
+             <h3 className="font-semibold text-white mb-2">Civiles Restantes: {civilians.length}</h3>
+             {civilians.map((p) => (
+               <p key={p.id} className="text-gray-300">• {p.name}</p>
+             ))}
+           </div>
+         </div>
         </div>
 
         <button

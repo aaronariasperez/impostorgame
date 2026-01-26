@@ -24,30 +24,30 @@ export default function VotingPhase() {
     }
   };
 
-  return (
-    <div className="min-h-screen p-4">
-      <div className="max-w-2xl mx-auto">
-        <div className="bg-white rounded-lg shadow-2xl p-8 mb-6">
+return (
+     <div className="min-h-screen p-4 bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+       <div className="max-w-2xl mx-auto">
+         <div className="bg-gray-800 rounded-lg shadow-2xl p-8 mb-6 border border-gray-700">
           <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
             🗳️ Votación
           </h2>
 
-          <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6">
-            <p className="text-gray-700">
-              Selecciona al jugador que crees que es el impostor
-            </p>
-          </div>
+<div className="bg-blue-900 border-l-4 border-blue-700 p-4 mb-6">
+             <p className="text-gray-300">
+               Selecciona al jugador que crees que es el impostor
+             </p>
+           </div>
 
           <div className="space-y-3 mb-6">
             {activePlayers.map((player) => (
               <button
                 key={player.id}
                 onClick={() => handleSelectPlayer(player.id)}
-                className={`w-full p-4 rounded-lg font-semibold transition duration-200 ${
-                  selectedPlayer === player.id
-                    ? 'bg-gray-700 text-white border-2 border-gray-800'
-                    : 'bg-gray-100 hover:bg-gray-200 text-gray-800 border-2 border-gray-300'
-                }`}
+className={`w-full p-4 rounded-lg font-semibold transition duration-200 ${
+                   selectedPlayer === player.id
+                     ? 'bg-gray-700 text-white border-2 border-gray-600'
+                     : 'bg-gray-700 hover:bg-gray-600 text-gray-300 border-2 border-gray-600'
+                 }`}
               >
                 {player.name}
               </button>
@@ -57,7 +57,7 @@ export default function VotingPhase() {
           <button
             onClick={handleRevealRole}
             disabled={!selectedPlayer}
-            className="w-full bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white font-bold py-3 px-4 rounded-lg transition duration-200"
+className="w-full bg-red-900 hover:bg-red-800 disabled:bg-gray-500 text-white font-bold py-3 px-4 rounded-lg transition duration-200"
           >
             Revelar Rol
           </button>
