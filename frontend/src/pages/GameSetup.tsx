@@ -292,6 +292,18 @@ className="hover:text-gray-300 underline"
               Términos de Servicio
             </a>
           </div>
+
+          {/* Buy Me a Coffee Link */}
+          <div className="text-center mt-4">
+            <a
+              href="https://buymeacoffee.com/aaronarias"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block bg-yellow-600 hover:bg-yellow-500 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 text-sm"
+            >
+              ☕ ¿Me invitas a un café? (sin presión)
+            </a>
+          </div>
         </div>
       </div>
     </div>

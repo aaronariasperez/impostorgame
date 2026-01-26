@@ -13,6 +13,8 @@ function App() {
   useEffect(() => {
     // Simulate app initialization
     setIsLoading(false);
+    // Scroll to top on mount
+    window.scrollTo(0, 0);
   }, []);
 
   // Log visit on app mount (only once)
@@ -27,7 +29,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+    <div className="fixed inset-0 overflow-auto bg-gradient-to-br from-gray-900 via-gray-800 to-black">
       {phase === 'setup' ? <GameSetup /> : <GamePage />}
     </div>
   );
