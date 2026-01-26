@@ -255,6 +255,27 @@ export default function GameSetup() {
           >
             Comenzar Juego
           </button>
+
+          {/* Legal Links Footer */}
+          <div className="flex justify-center gap-4 text-xs text-gray-600 mt-6 pt-4 border-t border-gray-200">
+            <a
+              href="https://raw.githubusercontent.com/aaronariasperez/impostorgame/feature/mobile/PRIVACY_POLICY.md"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-purple-600 underline"
+            >
+              Política de Privacidad
+            </a>
+            <span>•</span>
+            <a
+              href="https://raw.githubusercontent.com/aaronariasperez/impostorgame/feature/mobile/TERMS_OF_SERVICE.md"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-purple-600 underline"
+            >
+              Términos de Servicio
+            </a>
+          </div>
         </div>
       </div>
     </div>
