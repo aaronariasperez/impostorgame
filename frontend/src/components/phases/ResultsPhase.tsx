@@ -33,15 +33,14 @@ export default function ResultsPhase() {
     });
   };
 
-  return (
-<div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+   return (
+     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-gray-900 via-gray-800 to-black">
        <div className="bg-gray-800 rounded-lg shadow-2xl p-8 max-w-md w-full border border-gray-700">
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
-          📊 Resultados
-        </h2>
+         <h2 className="text-3xl font-bold text-center text-white mb-6">
+           📊 Resultados
+         </h2>
 
-        {eliminatedPlayer && (
-{eliminatedPlayer && (
+         {eliminatedPlayer && (
            <div className={`p-6 rounded-lg mb-6 text-center ${
              eliminatedPlayer.role === 'impostor'
                ? 'bg-red-900 border-2 border-red-700'
@@ -60,11 +59,8 @@ export default function ResultsPhase() {
              </p>
            </div>
          )}
-        )}
 
-        <div className="space-y-4 mb-6">
-          <div>
-<div className="space-y-4 mb-6">
+         <div className="space-y-4 mb-6">
            <div>
              <h3 className="font-semibold text-white mb-2">Impostores Restantes: {impostors.length}</h3>
              {impostors.map((p) => (
@@ -79,7 +75,17 @@ export default function ResultsPhase() {
              ))}
            </div>
          </div>
-        </div>
+
+         <button
+           onClick={handleContinue}
+           className="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-lg transition duration-200"
+         >
+           Continuar
+         </button>
+       </div>
+     </div>
+   );
+ }
 
         <button
           onClick={handleContinue}
