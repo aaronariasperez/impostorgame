@@ -48,3 +48,6 @@ frontend/capacitor.config.json
 
 # Refact knowledge
 .refact_knowledge
+
+# Word packs (managed in Firebase)
+backend/word_packs/
