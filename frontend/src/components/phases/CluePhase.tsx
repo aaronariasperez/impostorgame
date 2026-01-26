@@ -98,10 +98,10 @@ export default function CluePhase() {
     return <LoadingScreen message="Preparando turno..." />;
   }
 
-  const isCivilian = currentCluePlayer.role === 'civilian';
-  const bgColor = isCivilian ? 'bg-blue-100 border-blue-400' : 'bg-red-100 border-red-400';
-  const textColor = isCivilian ? 'text-blue-600' : 'text-red-600';
-  const roleText = isCivilian ? '👤 Civil' : '🎭 Impostor';
+const isCivilian = currentCluePlayer.role === 'civilian';
+   const bgColor = isCivilian ? 'bg-blue-900 border-blue-700' : 'bg-red-900 border-red-700';
+   const textColor = isCivilian ? 'text-blue-300' : 'text-red-300';
+   const roleText = isCivilian ? '👤 Civil' : '🎭 Impostor';
 
   return (
     <div 
@@ -147,31 +147,33 @@ className="fixed inset-0 bg-gradient-to-b from-gray-800 to-gray-900 rounded-b-3x
       {revealed && (
 <div className="bg-gray-800 rounded-lg shadow-2xl p-8 max-w-md w-full border border-gray-700">
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">
-              Turno de {displayedPlayerName}
-            </h2>
-            <p className="text-gray-600">
-              Jugador {currentPlayerIndex + 1} de {activePlayers.length}
-            </p>
-            <p className="text-sm text-gray-500 mt-2">Ronda {round}</p>
+<h2 className="text-2xl font-bold text-white mb-2">
+               Turno de {displayedPlayerName}
+             </h2>
+             <p className="text-white">
+               Jugador {currentPlayerIndex + 1} de {activePlayers.length}
+             </p>
+             <p className="text-sm text-gray-300 mt-2">Ronda {round}</p>
           </div>
 
           <Timer timeLeft={timeLeft} />
 
-          <div className={`border-2 rounded-lg p-6 mb-6 text-center ${bgColor}`}>
-            <p className="text-gray-700 font-semibold mb-2">Eres:</p>
-            <p className={`text-3xl font-bold ${textColor}`}>
-              {roleText}
-            </p>
-          </div>
+<div className={`border-2 rounded-lg p-6 mb-6 text-center ${bgColor}`}>
+             <p className="text-gray-300 font-semibold mb-2">Eres:</p>
+             <p className={`text-3xl font-bold ${textColor}`}>
+               {roleText}
+             </p>
+           </div>
 
           {isFirstRound && (
-            <div className={`border-2 rounded-lg p-6 mb-6 text-center ${bgColor}`}>
-              <p className="text-gray-700 font-semibold mb-2">Tu palabra es:</p>
-<p className="text-4xl font-bold text-gray-300">
-                {currentCluePlayer.word}
-              </p>
-            </div>
+{isFirstRound && (
+             <div className={`border-2 rounded-lg p-6 mb-6 text-center ${bgColor}`}>
+               <p className="text-gray-300 font-semibold mb-2">Tu palabra es:</p>
+               <p className="text-4xl font-bold text-white">
+                 {currentCluePlayer.word}
+               </p>
+             </div>
+           )}
           )}
 
           {!submitted && (
