@@ -30,10 +30,10 @@ async function migrateWordPacks() {
       const categoryName = file.replace('.json', '');
       const categoryId = categoryName.toLowerCase();
 
-      const wordItems = data.map((item: any) => ({
-        word: item.p,
-        attributes: item.a || [],
-      }));
+       const wordItems = data.map((item: any) => ({
+         p1: item.p1,
+         p2: item.p2,
+       }));
 
       const docData = {
         name: categoryName,

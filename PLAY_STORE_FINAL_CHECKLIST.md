@@ -32,16 +32,16 @@
 ### 1. **Update Legal Documents** (15 minutes)
 
 **Files to Update:**
-- `PRIVACY_POLICY.md` - Replace `[your-email@example.com]` and `[Your Company Address]`
-- `TERMS_OF_SERVICE.md` - Replace `[Your Jurisdiction]`, `[your-email@example.com]`, `[Your Company Address]`
-- `DATA_SAFETY_FORM.md` - Replace `[your-email@example.com]`
+- `PRIVACY_POLICY.md` - Replace `impostorgamexiklana@proton.me` and `Online`
+- `TERMS_OF_SERVICE.md` - Replace `Spain`, `impostorgamexiklana@proton.me`, `Online`
+- `DATA_SAFETY_FORM.md` - Replace `impostorgamexiklana@proton.me`
 
 **Action Items:**
 ```bash
 # Find and replace in all files:
-[your-email@example.com] → your-actual-email@example.com
-[Your Company Address] → Your actual address
-[Your Jurisdiction] → Your jurisdiction (e.g., "Spain", "California")
+impostorgamexiklana@proton.me → your-actual-email@example.com
+Online → Your actual address
+Spain → Your jurisdiction (e.g., "Spain", "California")
 ```
 
 ### 2. **Add Links to App** (30 minutes)
@@ -277,8 +277,8 @@ Privacy:
 ### Immediate (Next 30 minutes)
 ```bash
 # 1. Update legal documents
-sed -i 's/\[your-email@example.com\]/your-email@example.com/g' PRIVACY_POLICY.md
-sed -i 's/\[your-email@example.com\]/your-email@example.com/g' TERMS_OF_SERVICE.md
+sed -i 's/\[impostorgamexiklana@proton.me\]/impostorgamexiklana@proton.me/g' PRIVACY_POLICY.md
+sed -i 's/\[impostorgamexiklana@proton.me\]/impostorgamexiklana@proton.me/g' TERMS_OF_SERVICE.md
 sed -i 's/\[Your Company Address\]/Your Address/g' PRIVACY_POLICY.md
 sed -i 's/\[Your Company Address\]/Your Address/g' TERMS_OF_SERVICE.md
 sed -i 's/\[Your Jurisdiction\]/Spain/g' TERMS_OF_SERVICE.md

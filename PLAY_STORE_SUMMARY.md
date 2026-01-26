@@ -114,9 +114,9 @@ Files to update:
 - DATA_SAFETY_FORM.md
 
 Replace:
-[your-email@example.com] → your-actual-email@example.com
-[Your Company Address] → Your actual address
-[Your Jurisdiction] → Your jurisdiction
+impostorgamexiklana@proton.me → your-actual-email@example.com
+Online → Your actual address
+Spain → Your jurisdiction
 ```
 
 #### 2. Add Links to App (30 min)

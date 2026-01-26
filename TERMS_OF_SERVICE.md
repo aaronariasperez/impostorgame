@@ -92,7 +92,7 @@ Upon termination:
 
 ## 10. Governing Law
 
-These Terms are governed by and construed in accordance with the laws of [Your Jurisdiction], without regard to its conflict of law principles.
+These Terms are governed by and construed in accordance with the laws of Spain, without regard to its conflict of law principles.
 
 ## 11. Dispute Resolution
 
@@ -100,7 +100,7 @@ Any dispute arising from these Terms or your use of the App shall be resolved th
 
 1. **Informal Resolution:** First, attempt to resolve the dispute informally by contacting us
 2. **Binding Arbitration:** If informal resolution fails, disputes shall be resolved through binding arbitration
-3. **Jurisdiction:** If arbitration is not available, disputes shall be resolved in the courts of [Your Jurisdiction]
+3. **Jurisdiction:** If arbitration is not available, disputes shall be resolved in the courts of Spain
 
 ## 12. Severability
 
@@ -114,8 +114,8 @@ These Terms, together with our Privacy Policy, constitute the entire agreement b
 
 If you have questions about these Terms of Service, please contact us at:
 
-**Email:** [your-email@example.com]
-**Address:** [Your Company Address]
+**Email:** impostorgamexiklana@proton.me
+**Address:** Online
 
 ## 15. Specific Provisions by Jurisdiction
 

@@ -5,7 +5,7 @@ import * as admin from 'firebase-admin';
 
 export interface WordItem {
   word: string;
-  attributes: string[];
+  hint: string;
 }
 
 export interface WordPack {
@@ -50,26 +50,26 @@ export class WordPacksService implements OnModuleInit {
 
       this.wordPacks = [];
 
-      snapshot.forEach((doc) => {
-        const data = doc.data();
-        const wordItems: WordItem[] = (data.wordItems || []).map(
-          (item: any) => ({
-            word: item.word,
-            attributes: item.attributes || [],
-          }),
-        );
+       snapshot.forEach((doc) => {
+         const data = doc.data();
+         const wordItems: WordItem[] = (data.wordItems || []).map(
+           (item: any) => ({
+             word: item.p1,
+             hint: item.p2,
+           }),
+         );
 
-        const words = wordItems.map((item) => item.word);
+         const words = wordItems.map((item) => item.word);
 
-        this.wordPacks.push({
-          id: doc.id,
-          name: data.name,
-          description: data.description,
-          language: data.language || 'es',
-          words,
-          wordItems,
-        });
-      });
+         this.wordPacks.push({
+           id: doc.id,
+           name: data.name,
+           description: data.description,
+           language: data.language || 'es',
+           words,
+           wordItems,
+         });
+       });
 
       console.log(`Loaded ${this.wordPacks.length} word packs from Firebase`);
     } catch (error) {
@@ -114,31 +114,29 @@ export class WordPacksService implements OnModuleInit {
     };
   }
 
-  async getRandomSelection(
-    ids: string[],
-  ): Promise<{ civilianWord: string; impostorHint: string } | null> {
-    await this.ensureLoaded();
+   async getRandomSelection(
+     ids: string[],
+   ): Promise<{ civilianWord: string; impostorHint: string } | null> {
+     await this.ensureLoaded();
 
-    const uniqueIds = [...new Set(ids.filter(Boolean))];
-    if (uniqueIds.length === 0) return null;
+     const uniqueIds = [...new Set(ids.filter(Boolean))];
+     if (uniqueIds.length === 0) return null;
 
-    const packs = uniqueIds
-      .map((id) => this.wordPacks.find((pack) => pack.id === id))
-      .filter((pack) => pack !== undefined) as WordPack[];
+     const packs = uniqueIds
+       .map((id) => this.wordPacks.find((pack) => pack.id === id))
+       .filter((pack) => pack !== undefined) as WordPack[];
 
-    if (!packs.length) return null;
+     if (!packs.length) return null;
 
-    const combined = packs.flatMap((p) => p.wordItems ?? []);
-    if (combined.length === 0) return null;
+     const combined = packs.flatMap((p) => p.wordItems ?? []);
+     if (combined.length === 0) return null;
 
-    const item = combined[randomInt(combined.length)];
-    const civilianWord = item.word;
+     const item = combined[randomInt(combined.length)];
+     const civilianWord = item.word;
+     const impostorHint = item.hint;
 
-    const attrs = item.attributes ?? [];
-    const impostorHint = attrs.length ? attrs[randomInt(attrs.length)] : '';
-
-    return { civilianWord, impostorHint };
-  }
+     return { civilianWord, impostorHint };
+   }
 
   async getPacksByIds(ids: string[]): Promise<WordPack | null> {
     await this.ensureLoaded();

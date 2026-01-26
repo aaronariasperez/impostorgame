@@ -41,7 +41,19 @@ export default function GameSetup() {
     const loadWordPacks = async () => {
       try {
         const packs = await wordPackService.getAllPacks();
-        setWordPacks(packs);
+        
+        // Sort packs: Pack facil first, then Pack dificil
+        const sortedPacks = packs.sort((a, b) => {
+          const order = ['pack facil', 'pack dificil'];
+          const aIndex = order.indexOf(a.id.toLowerCase());
+          const bIndex = order.indexOf(b.id.toLowerCase());
+          
+          if (aIndex === -1) return 1;
+          if (bIndex === -1) return -1;
+          return aIndex - bIndex;
+        });
+        
+        setWordPacks(sortedPacks);
         setSelectedPackIds([]);
         setSelectedPack(null);
       } catch (err) {

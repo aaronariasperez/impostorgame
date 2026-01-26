@@ -28,9 +28,9 @@ Actualizar en estos archivos:
 
 Reemplazar:
 ```
-[your-email@example.com] → tu-email@example.com
-[Your Company Address] → Tu dirección
-[Your Jurisdiction] → Tu jurisdicción
+impostorgamexiklana@proton.me → tu-email@example.com
+Online → Tu dirección
+Spain → Tu jurisdicción
 ```
 
 ### 2. Agregar Enlaces a la App (30 min)
@@ -102,7 +102,7 @@ Todos los documentos están listos en el repo:
 
 ```bash
 # 1. Actualizar documentos con tu info
-sed -i 's/\[your-email@example.com\]/tu-email@example.com/g' PRIVACY_POLICY.md
+sed -i 's/\[impostorgamexiklana@proton.me\]/tu-email@example.com/g' PRIVACY_POLICY.md
 sed -i 's/\[Your Company Address\]/Tu dirección/g' PRIVACY_POLICY.md
 
 # 2. Commit

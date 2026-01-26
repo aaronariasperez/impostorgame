@@ -111,7 +111,7 @@ Depending on your location, you may have the following rights:
 - **Right to Opt-Out:** Opt-out of analytics collection (if applicable)
 - **Right to Portability:** Request your data in a portable format
 
-To exercise these rights, contact us at: [your-email@example.com]
+To exercise these rights, contact us at: impostorgamexiklana@proton.me
 
 ## 10. California Privacy Rights (CCPA)
 
@@ -122,7 +122,7 @@ If you are a California resident, you have specific rights under the California 
 - Right to delete personal information collected
 - Right to opt-out of the sale of personal information
 
-We do not sell personal information. To exercise your rights, contact us at: [your-email@example.com]
+We do not sell personal information. To exercise your rights, contact us at: impostorgamexiklana@proton.me
 
 ## 11. European Privacy Rights (GDPR)
 
@@ -135,7 +135,7 @@ If you are located in the European Union, you have rights under the General Data
 - Right to data portability
 - Right to object to processing
 
-To exercise these rights, contact us at: [your-email@example.com]
+To exercise these rights, contact us at: impostorgamexiklana@proton.me
 
 ## 12. Changes to This Privacy Policy
 
@@ -145,8 +145,8 @@ We may update this Privacy Policy from time to time. We will notify you of any c
 
 If you have questions about this Privacy Policy or our privacy practices, please contact us at:
 
-**Email:** [your-email@example.com]
-**Address:** [Your Company Address]
+**Email:** impostorgamexiklana@proton.me
+**Address:** Online
 
 ## 14. Compliance
 

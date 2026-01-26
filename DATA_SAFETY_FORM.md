@@ -206,7 +206,7 @@ Users can delete their data by:
 **Explanation:** Users can delete their data by:
 1. Clearing app cache through device settings
 2. Uninstalling the app
-3. Contacting us at [your-email@example.com]
+3. Contacting us at impostorgamexiklana@proton.me
 
 ---
 
@@ -240,7 +240,7 @@ Before submitting to Play Store:
 
 - [ ] Add Privacy Policy link to app settings
 - [ ] Add Terms of Service link to app settings
-- [ ] Update email address in both documents ([your-email@example.com])
+- [ ] Update email address in both documents (impostorgamexiklana@proton.me)
 - [ ] Update jurisdiction in Terms of Service
 - [ ] Update company address in both documents
 - [ ] Test Privacy Policy and Terms links on device
@@ -259,8 +259,8 @@ Before submitting to Play Store:
 
 For questions about data practices:
 
-**Email:** [your-email@example.com]
-**Address:** [Your Company Address]
+**Email:** impostorgamexiklana@proton.me
+**Address:** Online
 
 ---
 
