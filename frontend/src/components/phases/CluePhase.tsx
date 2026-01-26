@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import { useGameState } from '@/hooks/useGameState';
-import Timer from '@/components/Timer';
 import LoadingScreen from '@/components/LoadingScreen';
 
 export default function CluePhase() {
@@ -156,11 +155,9 @@ className="fixed inset-0 bg-gradient-to-b from-gray-800 to-gray-900 rounded-b-3x
              <p className="text-base font-semibold text-white mt-2">Ronda {round}</p>
            </div>
 
-           <Timer timeLeft={timeLeft} />
-
            <div className={`border-2 rounded-lg p-6 mb-6 text-center ${bgColor}`}>
              <p className="text-gray-300 font-semibold mb-2">Eres:</p>
-             <p className={`text-3xl font-bold text-black`}>
+             <p className={`text-3xl font-bold text-white`}>
                {roleText}
              </p>
            </div>
@@ -168,7 +165,7 @@ className="fixed inset-0 bg-gradient-to-b from-gray-800 to-gray-900 rounded-b-3x
            {isFirstRound && (
              <div className={`border-2 rounded-lg p-6 mb-6 text-center ${bgColor}`}>
                <p className="text-gray-300 font-semibold mb-2">Tu palabra es:</p>
-               <p className="text-4xl font-bold text-black">
+               <p className="text-4xl font-bold text-white">
                  {currentCluePlayer.word}
                </p>
              </div>
