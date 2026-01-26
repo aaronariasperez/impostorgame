@@ -166,8 +166,8 @@ export default function GameSetup() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+      <div className="bg-gray-800 rounded-lg shadow-2xl p-8 max-w-md w-full border border-gray-700">
         <div className="flex justify-center mb-8">
           <img 
             src="/imagen_portada.png" 
@@ -176,17 +176,17 @@ export default function GameSetup() {
           />
         </div>
 
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {error}
-          </div>
-        )}
+{error && (
+           <div className="bg-red-900 border border-red-700 text-red-200 px-4 py-3 rounded mb-4">
+             {error}
+           </div>
+         )}
 
         <div className="space-y-6">
           {/* Player Count */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Número de Jugadores: {playerCount}
+<label className="block text-sm font-semibold text-gray-300 mb-2">
+               Número de Jugadores: {playerCount}
             </label>
             <input
               type="range"
@@ -204,8 +204,8 @@ export default function GameSetup() {
 
           {/* Impostor Count */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Número de Impostores: {impostorCount}
+<label className="block text-sm font-semibold text-gray-300 mb-2">
+               Número de Impostores: {impostorCount}
             </label>
             <input
               type="range"
@@ -223,8 +223,8 @@ export default function GameSetup() {
 
           {/* Player Names */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Nombres de Jugadores
+<label className="block text-sm font-semibold text-gray-300 mb-2">
+               Nombres de Jugadores
             </label>
             <div className="space-y-2 max-h-40 overflow-y-auto">
               {playerNames.map((name, index) => (
@@ -234,7 +234,7 @@ export default function GameSetup() {
                   value={name}
                   onChange={(e) => handlePlayerNameChange(index, e.target.value)}
                   placeholder={`Jugador ${index + 1}`}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+className="w-full px-4 py-2 border border-gray-600 rounded-lg bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500"
                 />
               ))}
             </div>
@@ -242,24 +242,24 @@ export default function GameSetup() {
 
            {/* Word Pack Selection */}
            <div>
-             <label className="block text-sm font-semibold text-gray-700 mb-2">
-               Paquetes de Palabras (selecciona uno o más)
+<label className="block text-sm font-semibold text-gray-300 mb-2">
+                Paquetes de Palabras (selecciona uno o más)
              </label>
-             <div className="space-y-2 border border-gray-300 rounded-lg p-3 bg-gray-50">
+<div className="space-y-2 border border-gray-600 rounded-lg p-3 bg-gray-700">
                {wordPacks.map((pack) => (
-                 <label key={pack.id} className="flex items-center cursor-pointer hover:bg-gray-100 p-2 rounded">
+<label key={pack.id} className="flex items-center cursor-pointer hover:bg-gray-600 p-2 rounded">
                    <input
                      type="checkbox"
                      checked={selectedPackIds.includes(pack.id)}
                      onChange={() => handleTogglePack(pack.id)}
-                     className="w-4 h-4 text-purple-600 rounded focus:ring-2 focus:ring-purple-500"
+className="w-4 h-4 text-gray-500 rounded focus:ring-2 focus:ring-gray-400"
                    />
-                   <span className="ml-3 text-gray-700">{pack.name}</span>
+<span className="ml-3 text-gray-300">{pack.name}</span>
                  </label>
                ))}
              </div>
              {selectedPack && (
-               <p className="text-sm text-gray-600 mt-2">{selectedPack.description}</p>
+<p className="text-sm text-gray-400 mt-2">{selectedPack.description}</p>
              )}
            </div>
 
@@ -267,18 +267,18 @@ export default function GameSetup() {
           <button
             onClick={handleStartGame}
             disabled={!selectedPack}
-            className="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white font-bold py-3 px-4 rounded-lg transition duration-200"
+className="w-full bg-gray-700 hover:bg-gray-600 disabled:bg-gray-500 text-white font-bold py-3 px-4 rounded-lg transition duration-200"
           >
             Comenzar Juego
           </button>
 
           {/* Legal Links Footer */}
-          <div className="flex justify-center gap-4 text-xs text-gray-600 mt-6 pt-4 border-t border-gray-200">
+<div className="flex justify-center gap-4 text-xs text-gray-400 mt-6 pt-4 border-t border-gray-700">
             <a
               href="https://raw.githubusercontent.com/aaronariasperez/impostorgame/feature/mobile/PRIVACY_POLICY.md"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-purple-600 underline"
+className="hover:text-gray-300 underline"
             >
               Política de Privacidad
             </a>
@@ -287,7 +287,7 @@ export default function GameSetup() {
               href="https://raw.githubusercontent.com/aaronariasperez/impostorgame/feature/mobile/TERMS_OF_SERVICE.md"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-purple-600 underline"
+className="hover:text-gray-300 underline"
             >
               Términos de Servicio
             </a>
