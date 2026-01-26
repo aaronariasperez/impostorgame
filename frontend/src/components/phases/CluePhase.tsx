@@ -150,17 +150,17 @@ className="fixed inset-0 bg-gradient-to-b from-gray-800 to-gray-900 rounded-b-3x
 <h2 className="text-2xl font-bold text-white mb-2">
                Turno de {displayedPlayerName}
              </h2>
-             <p className="text-white">
+             <p className="text-lg font-semibold text-white">
                Jugador {currentPlayerIndex + 1} de {activePlayers.length}
              </p>
-             <p className="text-sm text-gray-300 mt-2">Ronda {round}</p>
+             <p className="text-base font-semibold text-white mt-2">Ronda {round}</p>
           </div>
 
           <Timer timeLeft={timeLeft} />
 
-<div className={`border-2 rounded-lg p-6 mb-6 text-center ${bgColor}`}>
+           <div className={`border-2 rounded-lg p-6 mb-6 text-center ${bgColor}`}>
              <p className="text-gray-300 font-semibold mb-2">Eres:</p>
-             <p className={`text-3xl font-bold ${textColor}`}>
+             <p className={`text-3xl font-bold text-black`}>
                {roleText}
              </p>
            </div>
@@ -169,9 +169,11 @@ className="fixed inset-0 bg-gradient-to-b from-gray-800 to-gray-900 rounded-b-3x
 {isFirstRound && (
              <div className={`border-2 rounded-lg p-6 mb-6 text-center ${bgColor}`}>
                <p className="text-gray-300 font-semibold mb-2">Tu palabra es:</p>
-               <p className="text-4xl font-bold text-white">
+               <p className="text-4xl font-bold text-black">
                  {currentCluePlayer.word}
                </p>
+             </div>
+           )}
              </div>
            )}
           )}
