@@ -8,7 +8,7 @@ export default function LoadingScreen({
   subMessage,
 }: LoadingScreenProps) {
   return (
-    <div className="flex items-center justify-center h-screen bg-gradient-to-br from-purple-600 to-blue-600">
+    <div className="flex items-center justify-center h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
       <div className="text-center">
         {/* Animated spinner icon */}
         <div className="mb-6 flex justify-center">

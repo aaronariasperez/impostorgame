@@ -51,7 +51,7 @@ export default function DiscussionPhase() {
 
           <button
             onClick={handleMoveToVoting}
-            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200"
+            className="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-lg transition duration-200"
           >
             Pasar a Votación
           </button>

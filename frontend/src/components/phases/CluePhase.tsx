@@ -106,12 +106,12 @@ export default function CluePhase() {
   return (
     <div 
       key={currentCluePlayer?.id}
-      className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-purple-600 to-blue-600 relative overflow-hidden"
+className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-gray-900 via-gray-800 to-black relative overflow-hidden"
     >
       {/* Draggable cover card - ONLY render when NOT revealed */}
       {!revealed && (
         <div
-          className="fixed inset-0 bg-gradient-to-b from-purple-700 to-purple-900 rounded-b-3xl shadow-2xl p-8 select-none z-50 flex flex-col items-center justify-end will-change-transform"
+className="fixed inset-0 bg-gradient-to-b from-gray-800 to-gray-900 rounded-b-3xl shadow-2xl p-8 select-none z-50 flex flex-col items-center justify-end will-change-transform"
           style={{
             transform: `translateY(-${dragY}px)`,
             touchAction: 'none',
@@ -145,7 +145,7 @@ export default function CluePhase() {
 
       {/* Content - ONLY render AFTER revealed */}
       {revealed && (
-        <div className="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full">
+<div className="bg-gray-800 rounded-lg shadow-2xl p-8 max-w-md w-full border border-gray-700">
           <div className="text-center mb-8">
             <h2 className="text-2xl font-bold text-gray-800 mb-2">
               Turno de {displayedPlayerName}
@@ -168,7 +168,7 @@ export default function CluePhase() {
           {isFirstRound && (
             <div className={`border-2 rounded-lg p-6 mb-6 text-center ${bgColor}`}>
               <p className="text-gray-700 font-semibold mb-2">Tu palabra es:</p>
-              <p className="text-4xl font-bold text-purple-600">
+<p className="text-4xl font-bold text-gray-300">
                 {currentCluePlayer.word}
               </p>
             </div>
@@ -177,7 +177,7 @@ export default function CluePhase() {
           {!submitted && (
             <button
               onClick={handleContinue}
-              className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200"
+className="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-lg transition duration-200"
             >
               Continuar
             </button>

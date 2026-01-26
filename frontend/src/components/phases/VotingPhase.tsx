@@ -45,8 +45,8 @@ export default function VotingPhase() {
                 onClick={() => handleSelectPlayer(player.id)}
                 className={`w-full p-4 rounded-lg font-semibold transition duration-200 ${
                   selectedPlayer === player.id
-                    ? 'bg-purple-600 text-white border-2 border-purple-800'
-                    : 'bg-purple-100 hover:bg-purple-200 text-purple-800 border-2 border-purple-300'
+                    ? 'bg-gray-700 text-white border-2 border-gray-800'
+                    : 'bg-gray-100 hover:bg-gray-200 text-gray-800 border-2 border-gray-300'
                 }`}
               >
                 {player.name}
