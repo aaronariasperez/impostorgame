@@ -99,7 +99,6 @@ export default function CluePhase() {
 
 const isCivilian = currentCluePlayer.role === 'civilian';
    const bgColor = isCivilian ? 'bg-blue-900 border-blue-700' : 'bg-red-900 border-red-700';
-   const textColor = isCivilian ? 'text-blue-300' : 'text-red-300';
    const roleText = isCivilian ? '👤 Civil' : '🎭 Impostor';
 
   return (
