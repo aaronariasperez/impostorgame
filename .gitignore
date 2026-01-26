@@ -51,3 +51,5 @@ frontend/capacitor.config.json
 
 # Word packs (managed in Firebase)
 backend/word_packs/
+
+*.jks

@@ -1,7 +1,7 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.impostor.game',
+  appId: 'com.aaronarias.impostor',
   appName: 'Impostor',
   webDir: 'dist',
   server: {
