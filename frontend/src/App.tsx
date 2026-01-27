@@ -24,6 +24,13 @@ function App() {
     logVisit();
   }, []);
 
+  // Log visit on app mount (only once)
+  useEffect(() => {
+    if (visitLoggedRef.current) return;
+    visitLoggedRef.current = true;
+    logVisit();
+  }, []);
+
   if (isLoading) {
     return <LoadingScreen message="Iniciando aplicación..." />;
   }
