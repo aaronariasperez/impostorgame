@@ -53,3 +53,6 @@ frontend/capacitor.config.json
 backend/word_packs/
 
 *.jks
+
+PLAY_STORE_UPLOAD.md
+QUICK_START_UPLOAD.md
