@@ -1,44 +1,17 @@
 import { WordPack } from '@/types/game';
-import { Capacitor } from '@capacitor/core';
-import { storageService } from './storageService';
+import { firebaseWordPackService } from './firebaseWordPackService';
 
-const isNative = Capacitor.isNativePlatform();
-
-const API_BASE = isNative 
-  ? 'https://impostorgame-1.onrender.com' 
-  : '';
-
-const API_URL = `${API_BASE}/api/word-packs`;
-
-// Set to true to simulate slow backend responses for testing loading screens
-const SIMULATE_DELAY = false;
-const DELAY_MS = 5000; // 5 seconds
-
-const simulateDelay = async () => {
-  if (SIMULATE_DELAY) {
-    await new Promise(resolve => setTimeout(resolve, DELAY_MS));
-  }
-};
+let cachedPacks: WordPack[] | null = null;
 
 export const wordPackService = {
   async getAllPacks(): Promise<WordPack[]> {
-    try {
-      await simulateDelay();
-      const response = await fetch(API_URL);
-      if (!response.ok) {
-        throw new Error('Failed to fetch word packs');
-      }
-      const packs = await response.json();
-      await storageService.cachePacks(packs);
-      return packs;
-    } catch (error) {
-      console.warn('Failed to fetch word packs online, trying cache:', error);
-      const cachedPacks = await storageService.getCachedPacks();
-      if (cachedPacks) {
-        return cachedPacks;
-      }
-      throw error;
+    if (cachedPacks) {
+      return cachedPacks;
     }
+
+    const packs = await firebaseWordPackService.getAllPacks();
+    cachedPacks = packs;
+    return packs;
   },
 
   async getSelection(ids: string[]): Promise<{ civilianWord: string; impostorHint: string }> {
@@ -46,36 +19,28 @@ export const wordPackService = {
       throw new Error('At least one word pack must be selected');
     }
 
-    try {
-      await simulateDelay();
-      const response = await fetch(`${API_URL}/selection`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ ids }),
-      });
+    const packs = await this.getAllPacks();
+    const selection = await firebaseWordPackService.getRandomSelection(ids, packs);
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch selection');
-      }
-
-      return response.json();
-    } catch (error) {
-      console.error('Error fetching selection:', error);
-      throw error;
+    if (!selection) {
+      throw new Error('No words available for selected packs');
     }
+
+    return selection;
   },
 
   async getCombinedPacks(ids: string[]): Promise<WordPack> {
     if (!ids || ids.length === 0) {
       throw new Error('At least one word pack must be selected');
     }
-    const idsQuery = ids.join(',');
-    const response = await fetch(`${API_URL}/combined?ids=${idsQuery}`);
-    if (!response.ok) {
+
+    const packs = await this.getAllPacks();
+    const combined = await firebaseWordPackService.getCombinedMeta(ids, packs);
+
+    if (!combined) {
       throw new Error(`Failed to fetch combined word packs: ${ids.join(', ')}`);
     }
-    return response.json();
+
+    return combined;
   },
 };

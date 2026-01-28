@@ -1,7 +1,7 @@
 {
   "name": "impostor-backend",
   "version": "0.0.1",
-  "description": "Impostor game backend - word pack service",
+  "description": "Impostor game backend - telemetry service",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
