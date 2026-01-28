@@ -31,35 +31,73 @@ const transformWordPack = (id: string, data: FirebaseWordPack): WordPack => {
   };
 };
 
-// Default word packs as fallback
+// Default word packs as fallback - Pack fácil and Pack difícil
+const PACK_FACIL_WORDS: Array<{ p1: string; p2: string }> = [
+  { "p1": "Cigarrillo", "p2": "Chimenea" },
+  { "p1": "Espejo", "p2": "Lago" },
+  { "p1": "Reloj", "p2": "Latido" },
+  { "p1": "Ancla", "p2": "Raíz" },
+  { "p1": "Viento", "p2": "Fantasma" },
+  { "p1": "Diamante", "p2": "Hielo" },
+  { "p1": "Mapa", "p2": "Memoria" },
+  { "p1": "Dinero", "p2": "Sangre" },
+  { "p1": "Cárcel", "p2": "Monasterio" },
+  { "p1": "Cine", "p2": "Sueño" },
+  { "p1": "Batería", "p2": "Alimento" },
+  { "p1": "Puente", "p2": "Túnel" },
+  { "p1": "Cuchillo", "p2": "Tijeras" },
+  { "p1": "Sudor", "p2": "Lluvia" },
+  { "p1": "Gafas", "p2": "Ventana" },
+  { "p1": "Jabón", "p2": "Mentira" },
+  { "p1": "Zapatos", "p2": "Neumáticos" },
+  { "p1": "Sal", "p2": "Azúcar" },
+  { "p1": "Tumba", "p2": "Baúl" }
+];
+
+const PACK_DIFICIL_WORDS: Array<{ p1: string; p2: string }> = [
+  { "p1": "Cámara", "p2": "Testigo" },
+  { "p1": "Cerebro", "p2": "CPU" },
+  { "p1": "Internet", "p2": "Telaraña" },
+  { "p1": "Cable", "p2": "Liana" },
+  { "p1": "Hormiga", "p2": "Obrero" },
+  { "p1": "Abeja", "p2": "Dron" },
+  { "p1": "Raíz", "p2": "Cimiento" },
+  { "p1": "Humo", "p2": "Señal" },
+  { "p1": "Ceniza", "p2": "Polvo" },
+  { "p1": "Llama", "p2": "Pasión" },
+  { "p1": "Esqueleto", "p2": "Andamio" },
+  { "p1": "Músculo", "p2": "Pistón" },
+  { "p1": "Pulmón", "p2": "Fuelle" },
+  { "p1": "Vómito", "p2": "Cascada" },
+  { "p1": "Cuna", "p2": "Nido" },
+  { "p1": "Lápiz", "p2": "Varita" },
+  { "p1": "Goma", "p2": "Perdón" },
+  { "p1": "Tiza", "p2": "Nieve" },
+  { "p1": "Papel", "p2": "Piel" }
+];
+
 const DEFAULT_WORD_PACKS: WordPack[] = [
   {
-    id: 'animales',
-    name: 'Animales',
-    description: 'Palabras relacionadas con animales',
+    id: 'pack facil',
+    name: 'Pack fácil',
+    description: 'Palabras con pistas más directas y obvias',
     language: 'es',
-    words: ['gato', 'perro', 'pajaro', 'pez', 'elefante'],
-    wordItems: [
-      { word: 'gato', attributes: ['felino doméstico'] },
-      { word: 'perro', attributes: ['mejor amigo del hombre'] },
-      { word: 'pajaro', attributes: ['tiene alas y vuela'] },
-      { word: 'pez', attributes: ['vive en el agua'] },
-      { word: 'elefante', attributes: ['animal grande con trompa'] },
-    ],
+    words: PACK_FACIL_WORDS.map(w => w.p1),
+    wordItems: PACK_FACIL_WORDS.map(w => ({
+      word: w.p1,
+      attributes: [w.p2],
+    })),
   },
   {
-    id: 'comidas',
-    name: 'Comidas',
-    description: 'Palabras relacionadas con comida',
+    id: 'pack dificil',
+    name: 'Pack difícil',
+    description: 'Palabras con pistas más abstractas y desafiantes',
     language: 'es',
-    words: ['pizza', 'hamburguesa', 'manzana', 'pan', 'queso'],
-    wordItems: [
-      { word: 'pizza', attributes: ['comida italiana con queso'] },
-      { word: 'hamburguesa', attributes: ['pan con carne'] },
-      { word: 'manzana', attributes: ['fruta roja o verde'] },
-      { word: 'pan', attributes: ['hecho de harina'] },
-      { word: 'queso', attributes: ['producto lácteo amarillo'] },
-    ],
+    words: PACK_DIFICIL_WORDS.map(w => w.p1),
+    wordItems: PACK_DIFICIL_WORDS.map(w => ({
+      word: w.p1,
+      attributes: [w.p2],
+    })),
   },
 ];
 

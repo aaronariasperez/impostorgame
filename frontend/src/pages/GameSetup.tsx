@@ -160,7 +160,7 @@ export default function GameSetup() {
     return (
       <LoadingScreen
         message="Cargando paquetes de palabras..."
-        subMessage="Servidor durmiendo, despertando... (puede tardar maximo 2 minutos)"
+        subMessage="Conectando con la base de datos..."
       />
     );
   }
