@@ -16,6 +16,7 @@ export default function CluePhase() {
   const submitClue = useGameState((state) => state.submitClue);
   const getActivePlayers = useGameState((state) => state.getActivePlayers);
   const round = useGameState((state) => state.round);
+  const withClues = useGameState((state) => state.withClues);
   const resetGame = useGameState((state) => state.resetGame);
 
   const activePlayers = getActivePlayers();
@@ -173,16 +174,16 @@ className="fixed inset-0 bg-gradient-to-b from-gray-800 to-gray-900 rounded-b-3x
              <p className={`text-3xl font-bold text-white`}>
                {roleText}
              </p>
-           </div>
-
-           {isFirstRound && (
-             <div className={`border-2 rounded-lg p-6 mb-6 text-center ${bgColor}`}>
-                <p className="text-gray-300 font-semibold mb-2">{isCivilian ? 'Tu palabra es:' : 'Tu pista es:'}</p>
-               <p className="text-4xl font-bold text-white">
-                 {currentCluePlayer.word}
-               </p>
-             </div>
-           )}
+            </div>
+            {isFirstRound && (withClues || isCivilian) && (
+              <div className={`border-2 rounded-lg p-6 mb-6 text-center ${bgColor}`}>
+                 <p className="text-gray-300 font-semibold mb-2">{isCivilian ? 'Tu palabra es:' : 'Tu pista es:'}</p>
+                
+                <p className="text-4xl font-bold text-white">
+                  {currentCluePlayer.word}
+                </p>
+              </div>
+            )}
 
            {!submitted && (
              <button
@@ -198,6 +199,7 @@ className="fixed inset-0 bg-gradient-to-b from-gray-800 to-gray-900 rounded-b-3x
                <p className="text-gray-600">Esperando al siguiente jugador...</p>
              </div>
            )}
+         
          </div>
        )}
      </div>

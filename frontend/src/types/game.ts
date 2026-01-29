@@ -22,6 +22,7 @@ export interface GameState {
   eliminatedPlayer?: Player;
   gameWinner?: 'civilians' | 'impostors';
   turnStarterId?: string;
+  withClues: boolean;
 }
 
 export interface WordItem {

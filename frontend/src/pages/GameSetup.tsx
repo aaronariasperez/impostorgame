@@ -11,13 +11,13 @@ export default function GameSetup() {
   const [playerNames, setPlayerNames] = useState<string[]>(
     Array.from({ length: 3 }, (_, i) => `Jugador ${i + 1}`)
   );
+  const [withClues, setWithClues] = useState(true);
   const [wordPacks, setWordPacks] = useState<WordPack[]>([]);
   const [selectedPackIds, setSelectedPackIds] = useState<string[]>([]);
   const [selectedPack, setSelectedPack] = useState<WordPack | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
-
   const initializeGame = useGameState((state) => state.initializeGame);
   const startGame = useGameState((state) => state.startGame);
   const setPlayerName = useGameState((state) => state.setPlayerName);
@@ -53,6 +53,7 @@ export default function GameSetup() {
         return {
           playerCount: config.playerCount || 3,
           impostorCount: config.impostorCount || 1,
+          withClues: config.withClues ?? true
         };
       }
     } catch (err) {
@@ -62,14 +63,14 @@ export default function GameSetup() {
   };
 
   // Save game configuration to localStorage
-  const saveGameConfig = (players: number, impostors: number) => {
+  const saveGameConfig = (players: number, impostors: number, withclue: boolean) => {
     try {
       if (typeof window === 'undefined' || !window.localStorage) {
         return;
       }
       localStorage.setItem(
         'impostor_game_config',
-        JSON.stringify({ playerCount: players, impostorCount: impostors })
+        JSON.stringify({ playerCount: players, impostorCount: impostors, withClues: withclue })
       );
     } catch (err) {
       console.error('Error saving game config:', err);
@@ -112,6 +113,7 @@ export default function GameSetup() {
       setPlayerCount(savedConfig.playerCount);
       setImpostorCount(savedConfig.impostorCount);
       setPlayerNames(loadSavedPlayerNames(savedConfig.playerCount));
+      setWithClues(savedConfig.withClues);
       setIsInitialized(true);
     }
   }, []);
@@ -136,9 +138,9 @@ export default function GameSetup() {
   // Save game configuration when it changes
   useEffect(() => {
     if (isInitialized) {
-      saveGameConfig(playerCount, impostorCount);
+      saveGameConfig(playerCount, impostorCount, withClues);
     }
-  }, [playerCount, impostorCount, isInitialized]);
+  }, [playerCount, impostorCount, withClues, isInitialized]);
 
   const handleTogglePack = (packId: string) => {
     const newSelectedIds = selectedPackIds.includes(packId)
@@ -204,7 +206,7 @@ export default function GameSetup() {
         selectedPackIds
       );
 
-      initializeGame(playerCount, impostorCount, civilianWord, impostorHint);
+      initializeGame(playerCount, impostorCount, civilianWord, impostorHint, withClues);
 
       for (let i = 0; i < playerCount; i++) {
         setPlayerName(`player-${i}`, playerNames[i]);
@@ -330,16 +332,34 @@ className="w-4 h-4 text-gray-500 rounded focus:ring-2 focus:ring-gray-400"
              {selectedPack && (
 <p className="text-sm text-gray-400 mt-2">{selectedPack.description}</p>
              )}
-           </div>
+          </div>
+            {/* With Clues Toggle */}
+            <div className="flex items-center justify-between mt-4">
+              <label htmlFor="with-clues-toggle" className="text-sm font-semibold text-gray-300">
+                Jugar con Pistas
+              </label>
+              <div
+                onClick={() => setWithClues(!withClues)}
+                className={`relative inline-flex items-center h-6 rounded-full w-11 cursor-pointer transition-colors ${
+                  withClues ? 'bg-indigo-600' : 'bg-gray-500'
+                }`}
+              >
+                <span
+                  className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform ${
+                    withClues ? 'translate-x-6' : 'translate-x-1'
+                  }`}
+                />
+              </div>
+            </div>
 
-          {/* Start Button */}
-          <button
-            onClick={handleStartGame}
-            disabled={!selectedPack}
-className="w-full bg-gray-700 hover:bg-gray-600 disabled:bg-gray-500 text-white font-bold py-3 px-4 rounded-lg transition duration-200"
-          >
-            Comenzar Juego
-          </button>
+            {/* Start Button */}
+            <button
+              onClick={handleStartGame}
+              disabled={!selectedPack}
+              className="w-full bg-gray-700 hover:bg-gray-600 disabled:bg-gray-500 text-white font-bold py-3 px-4 rounded-lg transition duration-200"
+            >
+              Comenzar Juego
+            </button>
 
           {/* Legal Links Footer */}
 <div className="flex justify-center gap-4 text-xs text-gray-400 mt-6 pt-4 border-t border-gray-700">
@@ -376,5 +396,6 @@ className="hover:text-gray-300 underline"
         </div>
       </div>
     </div>
+
   );
 }

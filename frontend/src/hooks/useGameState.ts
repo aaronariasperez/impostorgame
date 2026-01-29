@@ -3,7 +3,7 @@ import { GameState, Player, PlayerRole } from '@/types/game';
 
 interface GameStore extends GameState {
   // Setup actions
-  initializeGame: (playerCount: number, impostorCount: number, civilianWord: string, impostorHint: string) => void;
+  initializeGame: (playerCount: number, impostorCount: number, civilianWord: string, impostorHint: string, withClues: boolean) => void;
   setPlayerName: (playerId: string, name: string) => void;
 
   // Game flow actions
@@ -33,6 +33,7 @@ const initialState: GameState = {
   round: 1,
   votingResults: {},
   turnStarterId: undefined,
+  withClues: true,
 };
 
 // Load saved player names from localStorage
@@ -60,7 +61,7 @@ const savePlayerNames = (players: Player[]) => {
 
 export const useGameState = create<GameStore>((set, get) => ({
   ...initialState,
-  initializeGame: (playerCount, impostorCount, civilianWord, impostorHint) => {
+  initializeGame: (playerCount, impostorCount, civilianWord, impostorHint, withClues) => {
     const players: Player[] = [];
     const roles: PlayerRole[] = [];
     const savedNames = loadSavedPlayerNames();
@@ -94,6 +95,7 @@ export const useGameState = create<GameStore>((set, get) => ({
       civilianWord,
       impostorWord: impostorHint,
       impostorHint,
+      withClues,
       phase: 'setup',
       currentCluePlayerIndex: 0,
       round: 1,
@@ -112,7 +114,7 @@ export const useGameState = create<GameStore>((set, get) => ({
   },
 
   startGame: () => {
-    set({ phase: 'clue', currentCluePlayerIndex: 0 });
+      set({ phase: 'clue', currentCluePlayerIndex: 0 });
   },
 
    submitClue: (playerId, _clue) => {
