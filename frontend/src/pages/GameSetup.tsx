@@ -74,6 +74,14 @@ export default function GameSetup() {
     setPlayerNames(loadSavedPlayerNames(playerCount));
   }, [playerCount]);
 
+  // Adjust impostor count when player count changes
+  useEffect(() => {
+    const maxImpostors = Math.floor(playerCount / 2);
+    if (impostorCount > maxImpostors) {
+      setImpostorCount(maxImpostors);
+    }
+  }, [playerCount]);
+
   const handleTogglePack = (packId: string) => {
     const newSelectedIds = selectedPackIds.includes(packId)
       ? selectedPackIds.filter((id) => id !== packId)
