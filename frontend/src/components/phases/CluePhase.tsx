@@ -163,7 +163,7 @@ className="fixed inset-0 bg-gradient-to-b from-gray-800 to-gray-900 rounded-b-3x
 
            {isFirstRound && (
              <div className={`border-2 rounded-lg p-6 mb-6 text-center ${bgColor}`}>
-               <p className="text-gray-300 font-semibold mb-2">Tu palabra es:</p>
+                <p className="text-gray-300 font-semibold mb-2">{isCivilian ? 'Tu palabra es:' : 'Tu pista es:'}</p>
                <p className="text-4xl font-bold text-white">
                  {currentCluePlayer.word}
                </p>
