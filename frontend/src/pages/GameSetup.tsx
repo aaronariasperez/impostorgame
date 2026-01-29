@@ -16,6 +16,7 @@ export default function GameSetup() {
   const [selectedPack, setSelectedPack] = useState<WordPack | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   const initializeGame = useGameState((state) => state.initializeGame);
   const startGame = useGameState((state) => state.startGame);
@@ -24,6 +25,9 @@ export default function GameSetup() {
   // Load saved player names from localStorage
   const loadSavedPlayerNames = (count: number): string[] => {
     try {
+      if (typeof window === 'undefined' || !window.localStorage) {
+        return Array.from({ length: count }, (_, i) => `Jugador ${i + 1}`);
+      }
       const saved = localStorage.getItem('impostor_player_names');
       if (saved) {
         const savedNames = JSON.parse(saved);
@@ -31,12 +35,48 @@ export default function GameSetup() {
           savedNames[`player-${i}`] || `Jugador ${i + 1}`
         );
       }
-    } catch {
-      // Silently fail
+    } catch (err) {
+      console.error('Error loading player names:', err);
     }
     return Array.from({ length: count }, (_, i) => `Jugador ${i + 1}`);
   };
 
+  // Load saved game configuration from localStorage
+  const loadSavedGameConfig = () => {
+    try {
+      if (typeof window === 'undefined' || !window.localStorage) {
+        return { playerCount: 3, impostorCount: 1 };
+      }
+      const saved = localStorage.getItem('impostor_game_config');
+      if (saved) {
+        const config = JSON.parse(saved);
+        return {
+          playerCount: config.playerCount || 3,
+          impostorCount: config.impostorCount || 1,
+        };
+      }
+    } catch (err) {
+      console.error('Error loading game config:', err);
+    }
+    return { playerCount: 3, impostorCount: 1 };
+  };
+
+  // Save game configuration to localStorage
+  const saveGameConfig = (players: number, impostors: number) => {
+    try {
+      if (typeof window === 'undefined' || !window.localStorage) {
+        return;
+      }
+      localStorage.setItem(
+        'impostor_game_config',
+        JSON.stringify({ playerCount: players, impostorCount: impostors })
+      );
+    } catch (err) {
+      console.error('Error saving game config:', err);
+    }
+  };
+
+  // Load word packs and initial configuration on mount
   useEffect(() => {
     const loadWordPacks = async () => {
       try {
@@ -65,22 +105,40 @@ export default function GameSetup() {
     };
 
     loadWordPacks();
-    // Load saved player names on mount
-    setPlayerNames(loadSavedPlayerNames(3));
+    
+    // Load saved configuration on mount
+    if (!isInitialized) {
+      const savedConfig = loadSavedGameConfig();
+      setPlayerCount(savedConfig.playerCount);
+      setImpostorCount(savedConfig.impostorCount);
+      setPlayerNames(loadSavedPlayerNames(savedConfig.playerCount));
+      setIsInitialized(true);
+    }
   }, []);
 
   // Update player names when player count changes
   useEffect(() => {
-    setPlayerNames(loadSavedPlayerNames(playerCount));
-  }, [playerCount]);
+    if (isInitialized) {
+      setPlayerNames(loadSavedPlayerNames(playerCount));
+    }
+  }, [playerCount, isInitialized]);
 
   // Adjust impostor count when player count changes
   useEffect(() => {
-    const maxImpostors = Math.floor(playerCount / 2);
-    if (impostorCount > maxImpostors) {
-      setImpostorCount(maxImpostors);
+    if (isInitialized) {
+      const maxImpostors = Math.floor(playerCount / 2);
+      if (impostorCount > maxImpostors) {
+        setImpostorCount(maxImpostors);
+      }
     }
-  }, [playerCount]);
+  }, [playerCount, isInitialized]);
+
+  // Save game configuration when it changes
+  useEffect(() => {
+    if (isInitialized) {
+      saveGameConfig(playerCount, impostorCount);
+    }
+  }, [playerCount, impostorCount, isInitialized]);
 
   const handleTogglePack = (packId: string) => {
     const newSelectedIds = selectedPackIds.includes(packId)
@@ -122,12 +180,15 @@ export default function GameSetup() {
     
     // Save to localStorage immediately
     try {
+      if (typeof window === 'undefined' || !window.localStorage) {
+        return;
+      }
       const saved = localStorage.getItem('impostor_player_names');
       const savedNames = saved ? JSON.parse(saved) : {};
       savedNames[`player-${index}`] = name;
       localStorage.setItem('impostor_player_names', JSON.stringify(savedNames));
-    } catch {
-      // Silently fail if localStorage is not available
+    } catch (err) {
+      console.error('Error saving player name:', err);
     }
   };
 
