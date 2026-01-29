@@ -16,6 +16,7 @@ export default function CluePhase() {
   const submitClue = useGameState((state) => state.submitClue);
   const getActivePlayers = useGameState((state) => state.getActivePlayers);
   const round = useGameState((state) => state.round);
+  const resetGame = useGameState((state) => state.resetGame);
 
   const activePlayers = getActivePlayers();
   const currentPlayerIndex = activePlayers.findIndex((p) => p.id === currentCluePlayer?.id);
@@ -93,6 +94,10 @@ export default function CluePhase() {
     }
   };
 
+  const handleExitGame = () => {
+    resetGame();
+  };
+
   if (!currentCluePlayer) {
     return <LoadingScreen message="Preparando turno..." />;
   }
@@ -145,6 +150,15 @@ className="fixed inset-0 bg-gradient-to-b from-gray-800 to-gray-900 rounded-b-3x
       {revealed && (
 <div className="bg-gray-800 rounded-lg shadow-2xl p-8 max-w-md w-full border border-gray-700">
            <div className="text-center mb-8">
+            <button
+              onClick={handleExitGame}
+              className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+              aria-label="Salir de la partida"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+            </button>
              <h2 className="text-2xl font-bold text-white mb-2">
                Turno de {displayedPlayerName}
              </h2>
