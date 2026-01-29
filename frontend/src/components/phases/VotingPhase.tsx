@@ -29,9 +29,8 @@ export default function VotingPhase() {
     }
   };
   return(
-    <div className="min-h-screen p-4 bg-gradient-to-br from-gray-900 via-gray-800 to-black">
-       <div className="max-w-2xl mx-auto">
-         <div className="bg-gray-800 rounded-lg shadow-2xl p-8 mb-6 border border-gray-700">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+       <div className="bg-gray-800 rounded-lg shadow-2xl p-8 max-w-md w-full text-center border border-gray-700">
             <button
               onClick={handleExitGame}
               className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
@@ -76,6 +75,5 @@ export default function VotingPhase() {
            </button>
          </div>
        </div>
-     </div>
   );
 }
