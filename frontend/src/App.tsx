@@ -36,7 +36,7 @@ function App() {
   }
 
   return (
-    <div className="fixed inset-0 overflow-auto bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+    <div className="fixed inset-0 overflow-y-auto overflow-x-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-black">
       {phase === 'setup' ? <GameSetup /> : <GamePage />}
     </div>
   );

@@ -30,7 +30,7 @@ export default function GamePage() {
   const currentCluePlayer = useGameState((state) => state.getCurrentCluePlayer());
 
   return (
-    <div className="min-h-screen p-4">
+    <div>
       {phase === 'clue' && <CluePhase key={currentCluePlayer?.id} />}
       {phase === 'turn-starter' && <TurnStarterPhase />}
       {phase === 'discussion' && <DiscussionPhase />}

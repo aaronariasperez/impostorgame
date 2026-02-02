@@ -107,23 +107,24 @@ export default function CluePhase() {
   const bgColor = isCivilian ? 'bg-blue-900 border-blue-700' : 'bg-red-900 border-red-700';
   const roleText = isCivilian ? '👤 Civil' : '🎭 Impostor';
 
-  return (
-    <div
-      key={currentCluePlayer?.id}
-      className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-gray-900 via-gray-800 to-black relative overflow-hidden"
-    >
-      {/* Exit button - always visible */}
-      <button
-        className="fixed top-4 right-4 z-50 bg-black/40 hover:bg-black/60 text-gray-300 hover:text-white transition-colors rounded-lg p-2"
-        onClick={handleExitGame}
-        aria-label="Salir de la partida"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-        </svg>
-      </button>
-
-      {/* Draggable cover card - ONLY render when NOT revealed */}
+   return (
+     <>
+       <div className="fixed top-4 right-4 z-50">
+         <button
+           className="bg-black/40 hover:bg-black/60 text-gray-300 hover:text-white transition-colors rounded-lg p-2"
+           onClick={handleExitGame}
+           aria-label="Salir de la partida"
+         >
+           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+             <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+           </svg>
+         </button>
+       </div>
+       <div
+         key={currentCluePlayer?.id}
+         className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-black relative overflow-hidden"
+       >
+        {/* Draggable cover card - ONLY render when NOT revealed */}
       {!revealed && (
         <div
           className="fixed inset-0 bg-gradient-to-b from-gray-800 to-gray-900 rounded-b-3xl shadow-2xl p-8 select-none z-40 flex flex-col items-center justify-end will-change-transform"
@@ -161,7 +162,7 @@ export default function CluePhase() {
       {/* Content - ONLY render AFTER revealed */}
       {revealed && (
         <div className="relative">
-          <div className="bg-gray-800 rounded-lg shadow-2xl p-8 max-w-md w-full border border-gray-700">
+            <div className="bg-gray-800 rounded-lg shadow-2xl p-8 min-w-96 max-w-2xl border border-gray-700">
             <div className="text-center mb-8">
               <h2 className="text-2xl font-bold text-white mb-2">
                 Turno de {displayedPlayerName}
@@ -206,5 +207,6 @@ export default function CluePhase() {
         </div>
       )}
     </div>
+    </>
   );
 }
