@@ -103,19 +103,30 @@ export default function CluePhase() {
     return <LoadingScreen message="Preparando turno..." />;
   }
 
-const isCivilian = currentCluePlayer.role === 'civilian';
-   const bgColor = isCivilian ? 'bg-blue-900 border-blue-700' : 'bg-red-900 border-red-700';
-   const roleText = isCivilian ? '👤 Civil' : '🎭 Impostor';
+  const isCivilian = currentCluePlayer.role === 'civilian';
+  const bgColor = isCivilian ? 'bg-blue-900 border-blue-700' : 'bg-red-900 border-red-700';
+  const roleText = isCivilian ? '👤 Civil' : '🎭 Impostor';
 
   return (
-    <div 
+    <div
       key={currentCluePlayer?.id}
-className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-gray-900 via-gray-800 to-black relative overflow-hidden"
+      className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-gray-900 via-gray-800 to-black relative overflow-hidden"
     >
+      {/* Exit button - always visible */}
+      <button
+        className="fixed top-4 right-4 z-50 bg-black/40 hover:bg-black/60 text-gray-300 hover:text-white transition-colors rounded-lg p-2"
+        onClick={handleExitGame}
+        aria-label="Salir de la partida"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+        </svg>
+      </button>
+
       {/* Draggable cover card - ONLY render when NOT revealed */}
       {!revealed && (
         <div
-className="fixed inset-0 bg-gradient-to-b from-gray-800 to-gray-900 rounded-b-3xl shadow-2xl p-8 select-none z-50 flex flex-col items-center justify-end will-change-transform"
+          className="fixed inset-0 bg-gradient-to-b from-gray-800 to-gray-900 rounded-b-3xl shadow-2xl p-8 select-none z-40 flex flex-col items-center justify-end will-change-transform"
           style={{
             transform: `translateY(-${dragY}px)`,
             touchAction: 'none',
@@ -149,59 +160,51 @@ className="fixed inset-0 bg-gradient-to-b from-gray-800 to-gray-900 rounded-b-3x
 
       {/* Content - ONLY render AFTER revealed */}
       {revealed && (
-<div className="bg-gray-800 rounded-lg shadow-2xl p-8 max-w-md w-full border border-gray-700">
-           <div className="text-center mb-8">
-            <button
-              onClick={handleExitGame}
-              className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
-              aria-label="Salir de la partida"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-              </svg>
-            </button>
-             <h2 className="text-2xl font-bold text-white mb-2">
-               Turno de {displayedPlayerName}
-             </h2>
-             <p className="text-lg font-semibold text-white">
-               Jugador {currentPlayerIndex + 1} de {activePlayers.length}
-             </p>
-             <p className="text-base font-semibold text-white mt-2">Ronda {round}</p>
-           </div>
+        <div className="relative">
+          <div className="bg-gray-800 rounded-lg shadow-2xl p-8 max-w-md w-full border border-gray-700">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold text-white mb-2">
+                Turno de {displayedPlayerName}
+              </h2>
+              <p className="text-lg font-semibold text-white">
+                Jugador {currentPlayerIndex + 1} de {activePlayers.length}
+              </p>
+              <p className="text-base font-semibold text-white mt-2">Ronda {round}</p>
+            </div>
 
-           <div className={`border-2 rounded-lg p-6 mb-6 text-center ${bgColor}`}>
-             <p className="text-gray-300 font-semibold mb-2">Eres:</p>
-             <p className={`text-3xl font-bold text-white`}>
-               {roleText}
-             </p>
+            <div className={`border-2 rounded-lg p-6 mb-6 text-center ${bgColor}`}>
+              <p className="text-gray-300 font-semibold mb-2">Eres:</p>
+              <p className={`text-3xl font-bold text-white`}>
+                {roleText}
+              </p>
             </div>
             {isFirstRound && (withClues || isCivilian) && (
               <div className={`border-2 rounded-lg p-6 mb-6 text-center ${bgColor}`}>
-                 <p className="text-gray-300 font-semibold mb-2">{isCivilian ? 'Tu palabra es:' : 'Tu pista es:'}</p>
-                
+                <p className="text-gray-300 font-semibold mb-2">{isCivilian ? 'Tu palabra es:' : 'Tu pista es:'}</p>
+
                 <p className="text-4xl font-bold text-white">
                   {currentCluePlayer.word}
                 </p>
               </div>
             )}
 
-           {!submitted && (
-             <button
-               onClick={handleContinue}
-               className="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-lg transition duration-200"
-             >
-               Continuar
-             </button>
-           )}
+            {!submitted && (
+              <button
+                onClick={handleContinue}
+                className="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-lg transition duration-200"
+              >
+                Continuar
+              </button>
+            )}
 
-           {submitted && (
-             <div className="text-center">
-               <p className="text-gray-600">Esperando al siguiente jugador...</p>
-             </div>
-           )}
-         
-         </div>
-       )}
-     </div>
-   );
- }
+            {submitted && (
+              <div className="text-center">
+                <p className="text-gray-600">Esperando al siguiente jugador...</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
