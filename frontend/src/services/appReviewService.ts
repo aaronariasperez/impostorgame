@@ -1,25 +1,19 @@
-import { NativeMarket } from '@capacitor-community/native-market';
+import { RateApp } from 'capacitor-rate-app';
 
 /**
  * Servicio para solicitar In-App Review de Google Play Store
- * Usa el plugin @capacitor-community/native-market
+ * Usa el plugin capacitor-rate-app
  */
 export const appReviewService = {
   /**
-   * Abre la página de la app en Play Store/App Store
-   * Permite al usuario dejar una reseña
+   * Solicita el In-App Review de Google Play Store
+   * Muestra el diálogo nativo de reseña en dispositivos Android/iOS
    */
   async requestReview(): Promise<void> {
     try {
-      // Determina el appId según la plataforma
-      let appId = 'com.aaronarias.impostor'; // Android
-
-      // Abre la página de la app en la tienda
-      await NativeMarket.openStoreListing({
-        appId: appId
-      });
+      await RateApp.requestReview();
     } catch (error) {
-      console.error('Error al abrir la tienda:', error);
+      console.error('Error al solicitar In-App Review:', error);
       // Fallback en caso de error
       this.openPlayStore();
     }
