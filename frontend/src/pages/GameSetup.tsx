@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useGameState } from '@/hooks/useGameState';
 import { wordPackService } from '@/services/wordPackService';
 import { logGameEvent } from '@/services/telemetryService';
+import { appReviewService } from '@/services/appReviewService';
 import LoadingScreen from '@/components/LoadingScreen';
 import { WordPack } from '@/types/game';
 
@@ -382,17 +383,23 @@ className="hover:text-gray-300 underline"
             </a>
           </div>
 
+          {/* Valorar la app */}
+          <button
+            onClick={() => appReviewService.requestReview()}
+            className="w-full bg-green-600 hover:bg-green-500 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 text-sm cursor-pointer mt-4"
+          >
+            🌟 Valora la app, ¡Gracias!
+          </button>
+
           {/* Buy Me a Coffee Link */}
-          <div className="text-center mt-4">
-            <a
-              href="https://buymeacoffee.com/aaronarias"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block bg-yellow-600 hover:bg-yellow-500 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 text-sm"
-            >
-              ☕ ¿Me invitas a un café? (sin presión)
-            </a>
-          </div>
+          <a
+            href="https://buymeacoffee.com/aaronarias"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block w-full bg-yellow-600 hover:bg-yellow-500 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 text-sm text-center mt-4"
+          >
+            ☕ ¿Me invitas a un café? (sin presión)
+          </a>
         </div>
       </div>
     </div>
