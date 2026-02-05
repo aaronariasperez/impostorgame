@@ -10,7 +10,6 @@ export default function CluePhase() {
   const [displayedPlayerName, setDisplayedPlayerName] = useState<string>('');
   const [coverPlayerName, setCoverPlayerName] = useState<string>('');
   const [isDragging, setIsDragging] = useState(false);
-  const [isReturning, setIsReturning] = useState(false);
   const dragRef = useRef<number>(0);
   const startYRef = useRef<number>(0);
   const dragContainerRef = useRef<HTMLDivElement>(null);
@@ -88,11 +87,7 @@ export default function CluePhase() {
     setIsDragging(false);
     // Si no se completó el swipe, volver a posición inicial con animación
     if (dragY < SWIPE_THRESHOLD) {
-      setIsReturning(true);
-      setTimeout(() => {
-        setDragY(0);
-        setIsReturning(false);
-      }, 0);
+      setDragY(0);
     }
     dragRef.current = dragY;
   };
@@ -119,11 +114,7 @@ export default function CluePhase() {
     setIsDragging(false);
     // Si no se completó el swipe, volver a posición inicial con animación
     if (dragY < SWIPE_THRESHOLD) {
-      setIsReturning(true);
-      setTimeout(() => {
-        setDragY(0);
-        setIsReturning(false);
-      }, 0);
+      setDragY(0);
     }
     dragRef.current = dragY;
   };
@@ -170,7 +161,7 @@ export default function CluePhase() {
             className="fixed inset-0 rounded-b-3xl shadow-2xl p-8 select-none z-40 flex flex-col items-center justify-end will-change-transform"
             style={{
               transform: `translateY(-${dragY}px)`,
-              transition: isReturning ? 'transform 0.15s ease-out' : 'none',
+              transition: isDragging ? 'none' : 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
               touchAction: 'none',
               background: `linear-gradient(to bottom, rgba(${Math.min(31 + glowProgress * 50, 255)}, ${Math.min(41 + glowProgress * 50, 255)}, ${Math.min(55 + glowProgress * 80, 255)}, 1), rgba(${Math.min(31 + glowProgress * 30, 255)}, ${Math.min(41 + glowProgress * 30, 255)}, ${Math.min(55 + glowProgress * 50, 255)}, 1))`,
               boxShadow: `
