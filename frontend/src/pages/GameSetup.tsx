@@ -362,6 +362,25 @@ className="w-4 h-4 text-gray-500 rounded focus:ring-2 focus:ring-gray-400"
               Comenzar Juego
             </button>
 
+          <div className="flex justify-center gap-4 text-xs text-gray-400 mt-6  border-t border-gray-700"></div>
+          {/* Valorar la app */}
+          <button
+            onClick={() => appReviewService.requestReview()}
+            className="w-full bg-green-600 hover:bg-green-500 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 text-sm cursor-pointer mt-4"
+          >
+            🌟 Valora la app, ¡Gracias!
+          </button>
+
+          {/* Buy Me a Coffee Link */}
+          <a
+            href="https://buymeacoffee.com/aaronarias"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block w-full bg-yellow-600 hover:bg-yellow-500 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 text-sm text-center mt-4"
+          >
+            ☕ ¿Me invitas a un café? (sin presión)
+          </a>
+
           {/* Legal Links Footer */}
 <div className="flex justify-center gap-4 text-xs text-gray-400 mt-6 pt-4 border-t border-gray-700">
             <a
@@ -383,23 +402,6 @@ className="hover:text-gray-300 underline"
             </a>
           </div>
 
-          {/* Valorar la app */}
-          <button
-            onClick={() => appReviewService.requestReview()}
-            className="w-full bg-green-600 hover:bg-green-500 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 text-sm cursor-pointer mt-4"
-          >
-            🌟 Valora la app, ¡Gracias!
-          </button>
-
-          {/* Buy Me a Coffee Link */}
-          <a
-            href="https://buymeacoffee.com/aaronarias"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block w-full bg-yellow-600 hover:bg-yellow-500 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 text-sm text-center mt-4"
-          >
-            ☕ ¿Me invitas a un café? (sin presión)
-          </a>
         </div>
       </div>
     </div>
