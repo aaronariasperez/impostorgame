@@ -365,7 +365,12 @@ className="w-4 h-4 text-gray-500 rounded focus:ring-2 focus:ring-gray-400"
           <div className="flex justify-center gap-4 text-xs text-gray-400 mt-6  border-t border-gray-700"></div>
           {/* Valorar la app */}
           <button
-            onClick={() => appReviewService.requestReview()}
+            onClick={async () => {
+              const shown = await appReviewService.requestReview();
+              if (!shown) {
+                alert('¡Gracias por tu valoración! 🎉\n\nYa has valorado la app anteriormente.');
+              }
+            }}
             className="w-full bg-green-600 hover:bg-green-500 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 text-sm cursor-pointer mt-4"
           >
             🌟 Valora la app, ¡Gracias!
