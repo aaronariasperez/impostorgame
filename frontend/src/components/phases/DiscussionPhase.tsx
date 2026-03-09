@@ -26,7 +26,7 @@ export default function DiscussionPhase() {
   };
    return (
       <>
-        <div className="fixed top-4 right-4 z-50">
+        <div className="fixed top-safe-4 right-4 z-50">
           <button
             className="bg-black/40 hover:bg-black/60 text-gray-300 hover:text-white transition-colors rounded-lg p-2"
             onClick={handleExitGame}
