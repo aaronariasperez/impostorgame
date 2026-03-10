@@ -1,3 +1,6 @@
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '@/config/firebase';
+
 // Get or create session ID
 function getSessionId(): string {
   try {
@@ -15,28 +18,17 @@ function getSessionId(): string {
 // Log a visit to the app
 export async function logVisit() {
   try {
-    const payload = {
+    if (!db) return;
+
+    await addDoc(collection(db, 'telemetry_visits'), {
+      ts: new Date().toISOString(),
+      type: 'visit',
       sessionId: getSessionId(),
       path: window.location.pathname,
       referrer: document.referrer || null,
-      ua: navigator.userAgent,
-      ts: Date.now(),
-    };
-
-    const ok = navigator.sendBeacon(
-      '/api/telemetry/visit',
-      new Blob([JSON.stringify(payload)], { type: 'application/json' })
-    );
-
-    // Fallback if sendBeacon fails
-    if (!ok) {
-      fetch('/api/telemetry/visit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-        keepalive: true,
-      }).catch(() => {});
-    }
+      userAgent: navigator.userAgent,
+      timestamp: Date.now(),
+    });
   } catch (error) {
     console.error('Error logging visit:', error);
   }
@@ -45,21 +37,17 @@ export async function logVisit() {
 // Log a game event
 export async function logGameEvent(
   eventType: string,
-  data: Record<string, any>
+  data: Record<string, unknown>
 ) {
   try {
-    const payload = {
-      sessionId: getSessionId(),
-      eventType,
-      data,
-    };
+    if (!db) return;
 
-    fetch('/api/telemetry/event', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-      keepalive: true,
-    }).catch(() => {});
+    await addDoc(collection(db, 'telemetry_events'), {
+      ts: new Date().toISOString(),
+      type: eventType,
+      sessionId: getSessionId(),
+      eventData: data,
+    });
   } catch (error) {
     console.error('Error logging event:', error);
   }
