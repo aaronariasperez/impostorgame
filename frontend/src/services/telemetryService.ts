@@ -27,6 +27,7 @@ export async function logVisit() {
       path: window.location.pathname,
       referrer: document.referrer || null,
       userAgent: navigator.userAgent,
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       timestamp: Date.now(),
     });
   } catch (error) {

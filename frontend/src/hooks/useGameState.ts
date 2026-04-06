@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { GameState, Player, PlayerRole } from '@/types/game';
+import { logGameEvent } from '@/services/telemetryService';
 
 interface GameStore extends GameState {
   // Setup actions
@@ -177,6 +178,14 @@ export const useGameState = create<GameStore>((set, get) => ({
   },
 
   resetGame: () => {
+    const { phase, round, players } = get();
+    if (phase !== 'setup') {
+      logGameEvent('game_exit', {
+        fromPhase: phase,
+        round,
+        playerCount: players.length,
+      });
+    }
     set(initialState);
   },
 
