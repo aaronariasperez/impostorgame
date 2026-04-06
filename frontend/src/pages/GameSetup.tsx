@@ -164,16 +164,16 @@ export default function GameSetup() {
   const handleUnlockPack = async () => {
     if (!unlockDialogPack) return;
     const packId = unlockDialogPack.id;
-    // Trigger review — siempre, sin chequear historial previo
-    appReviewService.requestReviewForUnlock().catch(() => {});
+    setUnlockDialogPack(null);
+    // Mostrar review y esperar a que el usuario interactúe con el diálogo
+    // (cierre o valore) — solo entonces desbloquear el pack
+    await appReviewService.requestReviewForUnlock().catch(() => {});
     // Persist unlock
     const next = new Set(unlockedPacks).add(packId);
     setUnlockedPacks(next);
     try {
       localStorage.setItem('impostor_unlocked_packs', JSON.stringify([...next]));
     } catch { /* silent */ }
-    setUnlockDialogPack(null);
-    // Invalidate cache so next getAllPacks() re-evaluates lock state
     wordPackService.invalidateCache();
     setWordPacks((prev) => prev.map((p) => p.id === packId ? { ...p, locked: false } : p));
   };
