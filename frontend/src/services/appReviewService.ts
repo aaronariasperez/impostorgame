@@ -32,6 +32,19 @@ export const appReviewService = {
   },
 
   /**
+   * Solicita review sin comprobar historial previo — para unlock explícito por el usuario.
+   * Siempre intenta mostrar el diálogo nativo; fallback a Play Store si falla.
+   */
+  async requestReviewForUnlock(): Promise<void> {
+    try {
+      await RateApp.requestReview();
+      this.markReviewAsRequested();
+    } catch {
+      this.openPlayStore();
+    }
+  },
+
+  /**
    * Verifica si el usuario ya solicitó una valoración previamente
    */
   hasRequestedReview(): boolean {

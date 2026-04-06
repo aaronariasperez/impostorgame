@@ -164,8 +164,8 @@ export default function GameSetup() {
   const handleUnlockPack = async () => {
     if (!unlockDialogPack) return;
     const packId = unlockDialogPack.id;
-    // Trigger review — fire and forget, unlock regardless
-    appReviewService.requestReview().catch(() => {});
+    // Trigger review — siempre, sin chequear historial previo
+    appReviewService.requestReviewForUnlock().catch(() => {});
     // Persist unlock
     const next = new Set(unlockedPacks).add(packId);
     setUnlockedPacks(next);
