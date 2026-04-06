@@ -76,6 +76,76 @@ const PACK_DIFICIL_WORDS: Array<{ p1: string; p2: string }> = [
   { "p1": "Papel", "p2": "Piel" }
 ];
 
+const CELEBRITIES_PACK: WordPack = {
+  id: 'pack-celebrities',
+  name: 'Pack Celebrities',
+  description: '¿Eres de los que valoran lo bueno? Personas icónicas mundialmente reconocibles.',
+  language: 'es',
+  wordItems: [
+    { word: "Einstein",        attributes: ["Patente"]      },
+    { word: "Newton",          attributes: ["Luna"]         },
+    { word: "Darwin",          attributes: ["Tortuga"]      },
+    { word: "Freud",           attributes: ["Infancia"]     },
+    { word: "Marie Curie",     attributes: ["Laboratorio"]  },
+    { word: "Tesla",           attributes: ["Corriente"]    },
+    { word: "Hawking",         attributes: ["Universo"]     },
+    { word: "Galileo",         attributes: ["Inquisición"]  },
+    { word: "Edison",          attributes: ["Fonógrafo"]    },
+    { word: "Alan Turing",     attributes: ["Código"]       },
+    { word: "Picasso",         attributes: ["Toro"]         },
+    { word: "Da Vinci",        attributes: ["Vuelo"]        },
+    { word: "Michelangelo",    attributes: ["Techo"]        },
+    { word: "Dalí",            attributes: ["Reloj"]        },
+    { word: "Van Gogh",        attributes: ["Amarillo"]     },
+    { word: "Frida Kahlo",     attributes: ["Autorretrato"] },
+    { word: "Cervantes",       attributes: ["Molino"]       },
+    { word: "Shakespeare",     attributes: ["Fantasma"]     },
+    { word: "Freddie Mercury", attributes: ["Bohemio"]      },
+    { word: "Michael Jackson", attributes: ["Guante"]       },
+    { word: "Elvis",           attributes: ["Cadillac"]     },
+    { word: "Mozart",          attributes: ["Flauta"]       },
+    { word: "Beethoven",       attributes: ["Silencio"]     },
+    { word: "Madonna",         attributes: ["Vogue"]        },
+    { word: "Lady Gaga",       attributes: ["Oscar"]        },
+    { word: "David Bowie",     attributes: ["Espacio"]      },
+    { word: "John Lennon",     attributes: ["Imaginación"]  },
+    { word: "Jimi Hendrix",    attributes: ["Fuego"]        },
+    { word: "Bob Marley",      attributes: ["Paz"]          },
+    { word: "Shakira",         attributes: ["Mundial"]      },
+    { word: "Messi",           attributes: ["Pulga"]        },
+    { word: "Ronaldo",         attributes: ["Cabezazo"]     },
+    { word: "Muhammad Ali",    attributes: ["Antorcha"]     },
+    { word: "Mike Tyson",      attributes: ["Tatuaje"]      },
+    { word: "Michael Jordan",  attributes: ["Zapatilla"]    },
+    { word: "Usain Bolt",      attributes: ["Relámpago"]    },
+    { word: "Roger Federer",   attributes: ["Revés"]        },
+    { word: "Tiger Woods",     attributes: ["Masters"]      },
+    { word: "Maradona",        attributes: ["Diez"]         },
+    { word: "Napoleón",        attributes: ["Exilio"]       },
+    { word: "Alejandro Magno", attributes: ["Persia"]       },
+    { word: "Hitler",          attributes: ["Pintura"]      },
+    { word: "Stalin",          attributes: ["Acero"]        },
+    { word: "Gandhi",          attributes: ["Ayuno"]        },
+    { word: "Mandela",         attributes: ["Perdón"]       },
+    { word: "Cleopatra",       attributes: ["Serpiente"]    },
+    { word: "Churchill",       attributes: ["Whisky"]       },
+    { word: "Colón",           attributes: ["India"]        },
+    { word: "Lincoln",         attributes: ["Sombrero"]     },
+    { word: "Juana de Arco",   attributes: ["Santos"]       },
+    { word: "Marie Antoinette",attributes: ["Guillotina"]   },
+    { word: "Julio César",     attributes: ["Senado"]       },
+    { word: "Obama",           attributes: ["Canasta"]      },
+    { word: "Trump",           attributes: ["Golf"]         },
+    { word: "Che Guevara",     attributes: ["Médico"]       },
+    { word: "Sócrates",        attributes: ["Cicuta"]       },
+    { word: "Steve Jobs",      attributes: ["Garaje"]       },
+    { word: "Elon Musk",       attributes: ["Colonia"]      },
+    { word: "Walt Disney",     attributes: ["Criogénica"]   },
+    { word: "Neil Armstrong",  attributes: ["Tranquilidad"] },
+  ],
+};
+CELEBRITIES_PACK.words = CELEBRITIES_PACK.wordItems!.map(w => w.word);
+
 const DEFAULT_WORD_PACKS: WordPack[] = [
   {
     id: 'pack facil',
@@ -118,20 +188,20 @@ export const firebaseWordPackService = {
 
       if (packs.length === 0) {
         console.warn('No word packs found in Firestore, using defaults');
-        return DEFAULT_WORD_PACKS;
+        return [...DEFAULT_WORD_PACKS, CELEBRITIES_PACK];
       }
 
       // Cache the packs locally
       await storageService.cachePacks(packs);
-      return packs;
+      return [...packs, CELEBRITIES_PACK];
     } catch (error) {
       console.warn('Failed to fetch word packs from Firebase, trying cache:', error);
       const cachedPacks = await storageService.getCachedPacks();
       if (cachedPacks) {
-        return cachedPacks;
+        return [...cachedPacks, CELEBRITIES_PACK];
       }
       console.warn('No cached packs, using default word packs');
-      return DEFAULT_WORD_PACKS;
+      return [...DEFAULT_WORD_PACKS, CELEBRITIES_PACK];
     }
   },
 
