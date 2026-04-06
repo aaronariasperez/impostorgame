@@ -1,0 +1,106 @@
+import * as admin from 'firebase-admin';
+import * as dotenv from 'dotenv';
+import * as path from 'path';
+import * as fs from 'fs';
+
+dotenv.config();
+
+const CELEBRITIES_PACK = [
+  { "p1": "Einstein",        "p2": "Patente"      },
+  { "p1": "Newton",          "p2": "Luna"         },
+  { "p1": "Darwin",          "p2": "Tortuga"      },
+  { "p1": "Freud",           "p2": "Infancia"     },
+  { "p1": "Marie Curie",     "p2": "Laboratorio"  },
+  { "p1": "Tesla",           "p2": "Corriente"    },
+  { "p1": "Hawking",         "p2": "Universo"     },
+  { "p1": "Galileo",         "p2": "Inquisición"  },
+  { "p1": "Edison",          "p2": "Fonógrafo"    },
+  { "p1": "Alan Turing",     "p2": "Código"       },
+  { "p1": "Picasso",         "p2": "Toro"         },
+  { "p1": "Da Vinci",        "p2": "Vuelo"        },
+  { "p1": "Michelangelo",    "p2": "Techo"        },
+  { "p1": "Dalí",            "p2": "Reloj"        },
+  { "p1": "Van Gogh",        "p2": "Amarillo"     },
+  { "p1": "Frida Kahlo",     "p2": "Autorretrato" },
+  { "p1": "Cervantes",       "p2": "Molino"       },
+  { "p1": "Shakespeare",     "p2": "Fantasma"     },
+  { "p1": "Freddie Mercury", "p2": "Bohemio"      },
+  { "p1": "Michael Jackson", "p2": "Guante"       },
+  { "p1": "Elvis",           "p2": "Cadillac"     },
+  { "p1": "Mozart",          "p2": "Flauta"       },
+  { "p1": "Beethoven",       "p2": "Silencio"     },
+  { "p1": "Madonna",         "p2": "Vogue"        },
+  { "p1": "Lady Gaga",       "p2": "Oscar"        },
+  { "p1": "David Bowie",     "p2": "Espacio"      },
+  { "p1": "John Lennon",     "p2": "Imaginación"  },
+  { "p1": "Jimi Hendrix",    "p2": "Fuego"        },
+  { "p1": "Bob Marley",      "p2": "Paz"          },
+  { "p1": "Shakira",         "p2": "Mundial"      },
+  { "p1": "Messi",           "p2": "Pulga"        },
+  { "p1": "Ronaldo",         "p2": "Cabezazo"     },
+  { "p1": "Muhammad Ali",    "p2": "Antorcha"     },
+  { "p1": "Mike Tyson",      "p2": "Tatuaje"      },
+  { "p1": "Michael Jordan",  "p2": "Zapatilla"    },
+  { "p1": "Usain Bolt",      "p2": "Relámpago"    },
+  { "p1": "Roger Federer",   "p2": "Revés"        },
+  { "p1": "Tiger Woods",     "p2": "Masters"      },
+  { "p1": "Maradona",        "p2": "Diez"         },
+  { "p1": "Napoleón",        "p2": "Exilio"       },
+  { "p1": "Alejandro Magno", "p2": "Persia"       },
+  { "p1": "Hitler",          "p2": "Pintura"      },
+  { "p1": "Stalin",          "p2": "Acero"        },
+  { "p1": "Gandhi",          "p2": "Ayuno"        },
+  { "p1": "Mandela",         "p2": "Perdón"       },
+  { "p1": "Cleopatra",       "p2": "Serpiente"    },
+  { "p1": "Churchill",       "p2": "Whisky"       },
+  { "p1": "Colón",           "p2": "India"        },
+  { "p1": "Lincoln",         "p2": "Sombrero"     },
+  { "p1": "Juana de Arco",   "p2": "Santos"       },
+  { "p1": "Marie Antoinette","p2": "Guillotina"   },
+  { "p1": "Julio César",     "p2": "Senado"       },
+  { "p1": "Obama",           "p2": "Canasta"      },
+  { "p1": "Trump",           "p2": "Golf"         },
+  { "p1": "Che Guevara",     "p2": "Médico"       },
+  { "p1": "Sócrates",        "p2": "Cicuta"       },
+  { "p1": "Steve Jobs",      "p2": "Garaje"       },
+  { "p1": "Elon Musk",       "p2": "Colonia"      },
+  { "p1": "Walt Disney",     "p2": "Criogénica"   },
+  { "p1": "Neil Armstrong",  "p2": "Tranquilidad" },
+];
+
+async function uploadCelebritiesPack() {
+  // Init Firebase Admin
+  const serviceAccountPath = path.join(process.cwd(), 'firebase-service-account.json');
+  if (!fs.existsSync(serviceAccountPath)) {
+    console.error('❌ firebase-service-account.json not found in backend/');
+    process.exit(1);
+  }
+
+  const serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, 'utf-8'));
+
+  if (!admin.apps.length) {
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+    });
+  }
+
+  const db = admin.firestore();
+
+  const docData = {
+    name: 'Pack Celebrities',
+    description: '¿Eres de los que valoran lo bueno? Personas icónicas mundialmente reconocibles.',
+    language: 'es',
+    wordItems: CELEBRITIES_PACK,
+  };
+
+  await db.collection('word_packs').doc('pack-celebrities').set(docData);
+  console.log('✅ Pack Celebrities subido a Firestore (doc id: pack-celebrities)');
+  console.log(`   ${CELEBRITIES_PACK.length} pares de palabras`);
+
+  process.exit(0);
+}
+
+uploadCelebritiesPack().catch((err) => {
+  console.error('❌ Error:', err);
+  process.exit(1);
+});

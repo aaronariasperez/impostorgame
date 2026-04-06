@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useGameState } from '@/hooks/useGameState';
 import { wordPackService } from '@/services/wordPackService';
-import { logGameEvent } from '@/services/telemetryService';
 import { appReviewService } from '@/services/appReviewService';
+import { logGameEvent } from '@/services/telemetryService';
 import LoadingScreen from '@/components/LoadingScreen';
 import { WordPack } from '@/types/game';
 
@@ -173,7 +173,8 @@ export default function GameSetup() {
       localStorage.setItem('impostor_unlocked_packs', JSON.stringify([...next]));
     } catch { /* silent */ }
     setUnlockDialogPack(null);
-    // Refresh packs list to reflect unlock
+    // Invalidate cache so next getAllPacks() re-evaluates lock state
+    wordPackService.invalidateCache();
     setWordPacks((prev) => prev.map((p) => p.id === packId ? { ...p, locked: false } : p));
   };
 
