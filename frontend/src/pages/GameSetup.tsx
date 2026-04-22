@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useGameState } from '@/hooks/useGameState';
 import { wordPackService } from '@/services/wordPackService';
-import { logGameEvent } from '@/services/telemetryService';
 import { appReviewService } from '@/services/appReviewService';
+import { logGameEvent } from '@/services/telemetryService';
 import LoadingScreen from '@/components/LoadingScreen';
 import { WordPack } from '@/types/game';
 
@@ -19,6 +19,15 @@ export default function GameSetup() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [unlockedPacks, setUnlockedPacks] = useState<Set<string>>(() => {
+    try {
+      const raw = localStorage.getItem('impostor_unlocked_packs');
+      return raw ? new Set(JSON.parse(raw)) : new Set<string>();
+    } catch {
+      return new Set<string>();
+    }
+  });
+  const [unlockDialogPack, setUnlockDialogPack] = useState<WordPack | null>(null);
   const initializeGame = useGameState((state) => state.initializeGame);
   const startGame = useGameState((state) => state.startGame);
   const setPlayerName = useGameState((state) => state.setPlayerName);
@@ -143,6 +152,32 @@ export default function GameSetup() {
     }
   }, [playerCount, impostorCount, withClues, isInitialized]);
 
+  const isPackUnlocked = (pack: WordPack): boolean => {
+    if (!pack.locked) return true;
+    return unlockedPacks.has(pack.id);
+  };
+
+  const handleLockedPackClick = (pack: WordPack) => {
+    setUnlockDialogPack(pack);
+  };
+
+  const handleUnlockPack = async () => {
+    if (!unlockDialogPack) return;
+    const packId = unlockDialogPack.id;
+    setUnlockDialogPack(null);
+    // Mostrar review y esperar a que el usuario interactúe con el diálogo
+    // (cierre o valore) — solo entonces desbloquear el pack
+    await appReviewService.requestReviewForUnlock().catch(() => {});
+    // Persist unlock
+    const next = new Set(unlockedPacks).add(packId);
+    setUnlockedPacks(next);
+    try {
+      localStorage.setItem('impostor_unlocked_packs', JSON.stringify([...next]));
+    } catch { /* silent */ }
+    wordPackService.invalidateCache();
+    setWordPacks((prev) => prev.map((p) => p.id === packId ? { ...p, locked: false } : p));
+  };
+
   const handleTogglePack = (packId: string) => {
     const newSelectedIds = selectedPackIds.includes(packId)
       ? selectedPackIds.filter((id) => id !== packId)
@@ -217,6 +252,8 @@ export default function GameSetup() {
         playerCount,
         impostorCount,
         wordPackIds: selectedPackIds,
+        playerNames: playerNames.slice(0, playerCount),
+        withClues,
       });
 
       startGame();
@@ -238,6 +275,7 @@ export default function GameSetup() {
   }
 
   return (
+    <>
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-gray-900 via-gray-800 to-black">
       <div className="bg-gray-800 rounded-lg shadow-2xl p-8 max-w-md w-full border border-gray-700">
         <div className="flex justify-center mb-8">
@@ -318,17 +356,32 @@ className="w-full px-4 py-2 border border-gray-600 rounded-lg bg-gray-700 text-g
                 Paquetes de Palabras (selecciona uno o más)
              </label>
 <div className="space-y-2 border border-gray-600 rounded-lg p-3 bg-gray-700">
-               {wordPacks.map((pack) => (
-<label key={pack.id} className="flex items-center cursor-pointer hover:bg-gray-600 p-2 rounded">
-                   <input
-                     type="checkbox"
-                     checked={selectedPackIds.includes(pack.id)}
-                     onChange={() => handleTogglePack(pack.id)}
-className="w-4 h-4 text-gray-500 rounded focus:ring-2 focus:ring-gray-400"
-                   />
-<span className="ml-3 text-gray-300">{pack.name}</span>
-                 </label>
-               ))}
+               {wordPacks.map((pack) =>
+                 isPackUnlocked(pack) ? (
+                   <label key={pack.id} className="flex items-center cursor-pointer hover:bg-gray-600 p-2 rounded">
+                     <input
+                       type="checkbox"
+                       checked={selectedPackIds.includes(pack.id)}
+                       onChange={() => handleTogglePack(pack.id)}
+                       className="w-4 h-4 text-gray-500 rounded focus:ring-2 focus:ring-gray-400"
+                     />
+                     <span className="ml-3 text-gray-300">{pack.name}</span>
+                   </label>
+                 ) : (
+                   <button
+                     key={pack.id}
+                     type="button"
+                     onClick={() => handleLockedPackClick(pack)}
+                     className="w-full flex items-center justify-between p-2 rounded border border-dashed border-gray-500 hover:bg-gray-600 hover:border-gray-400 text-left transition-colors"
+                   >
+                     <div>
+                       <span className="text-gray-300">{pack.name}</span>
+                       <p className="text-xs text-gray-500 mt-0.5">Toca para desbloquear</p>
+                     </div>
+                     <span className="text-lg ml-2">🔒</span>
+                   </button>
+                 )
+               )}
              </div>
              {selectedPack && (
 <p className="text-sm text-gray-400 mt-2">{selectedPack.description}</p>
@@ -383,7 +436,7 @@ className="w-4 h-4 text-gray-500 rounded focus:ring-2 focus:ring-gray-400"
             rel="noopener noreferrer"
             className="block w-full bg-yellow-600 hover:bg-yellow-500 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 text-sm text-center mt-4"
           >
-            ☕ ¿Me invitas a un café? (sin presión)
+            ❤️ Apoyo económico para mantener el juego vivo
           </a>
 
           {/* Legal Links Footer */}
@@ -411,5 +464,34 @@ className="hover:text-gray-300 underline"
       </div>
     </div>
 
+      {/* Unlock dialog */}
+      {unlockDialogPack && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-800 rounded-xl p-6 max-w-sm w-full shadow-xl border border-gray-600">
+            <div className="text-4xl text-center mb-3">🌟</div>
+            <h2 className="text-lg font-bold text-white text-center mb-2">
+              {unlockDialogPack.name}
+            </h2>
+            <p className="text-gray-300 text-sm text-center mb-5">
+              {unlockDialogPack.description}
+              <br /><br />
+              Valora la app en la tienda para desbloquear este pack. Solo tarda 5 segundos.
+            </p>
+            <button
+              onClick={handleUnlockPack}
+              className="w-full bg-green-600 hover:bg-green-500 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 mb-3"
+            >
+              Valorar y desbloquear
+            </button>
+            <button
+              onClick={() => setUnlockDialogPack(null)}
+              className="w-full text-gray-400 hover:text-gray-200 text-sm py-2"
+            >
+              Ahora no
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

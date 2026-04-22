@@ -1,6 +1,24 @@
 import { WordPack } from '@/types/game';
 import { firebaseWordPackService } from './firebaseWordPackService';
 
+// Pack IDs that require unlock via app rating
+const LOCKED_PACK_IDS = new Set(['pack-celebrities']);
+
+function applyLockState(packs: WordPack[]): WordPack[] {
+  let unlockedIds: Set<string>;
+  try {
+    const raw = localStorage.getItem('impostor_unlocked_packs');
+    unlockedIds = raw ? new Set(JSON.parse(raw)) : new Set();
+  } catch {
+    unlockedIds = new Set();
+  }
+  return packs.map((pack) =>
+    LOCKED_PACK_IDS.has(pack.id) && !unlockedIds.has(pack.id)
+      ? { ...pack, locked: true }
+      : pack
+  );
+}
+
 let cachedPacks: WordPack[] | null = null;
 
 export const wordPackService = {
@@ -10,8 +28,12 @@ export const wordPackService = {
     }
 
     const packs = await firebaseWordPackService.getAllPacks();
-    cachedPacks = packs;
-    return packs;
+    cachedPacks = applyLockState(packs);
+    return cachedPacks;
+  },
+
+  invalidateCache(): void {
+    cachedPacks = null;
   },
 
   async getSelection(ids: string[]): Promise<{ civilianWord: string; impostorHint: string }> {

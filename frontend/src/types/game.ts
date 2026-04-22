@@ -37,4 +37,5 @@ export interface WordPack {
   language: string;
   words?: string[];
   wordItems?: WordItem[];
+  locked?: boolean;
 }

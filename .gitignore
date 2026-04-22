@@ -52,8 +52,14 @@ frontend/capacitor.config.json
 # Word packs (managed in Firebase)
 backend/word_packs/
 
+# SQLite database files
+backend/data/*.sqlite
+
 *.jks
 
 PLAY_STORE_UPLOAD.md
 QUICK_START_UPLOAD.md
 BUGS_FASE_PRUEBA.md
+
+# BMAD planning artifacts
+_bmad-output/
