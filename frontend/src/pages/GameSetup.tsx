@@ -372,10 +372,13 @@ className="w-full px-4 py-2 border border-gray-600 rounded-lg bg-gray-700 text-g
                      key={pack.id}
                      type="button"
                      onClick={() => handleLockedPackClick(pack)}
-                     className="w-full flex items-center justify-between p-2 rounded hover:bg-gray-600 text-left"
+                     className="w-full flex items-center justify-between p-2 rounded border border-dashed border-gray-500 hover:bg-gray-600 hover:border-gray-400 text-left transition-colors"
                    >
-                     <span className="text-gray-400">{pack.name}</span>
-                     <span className="text-lg">🔒</span>
+                     <div>
+                       <span className="text-gray-300">{pack.name}</span>
+                       <p className="text-xs text-gray-500 mt-0.5">Toca para desbloquear</p>
+                     </div>
+                     <span className="text-lg ml-2">🔒</span>
                    </button>
                  )
                )}
@@ -433,7 +436,7 @@ className="w-full px-4 py-2 border border-gray-600 rounded-lg bg-gray-700 text-g
             rel="noopener noreferrer"
             className="block w-full bg-yellow-600 hover:bg-yellow-500 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 text-sm text-center mt-4"
           >
-            ☕ ¿Me invitas a un café? (sin presión)
+            ❤️ Apoyo económico para mantener el juego vivo
           </a>
 
           {/* Legal Links Footer */}

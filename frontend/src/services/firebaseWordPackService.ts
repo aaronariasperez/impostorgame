@@ -79,7 +79,7 @@ const PACK_DIFICIL_WORDS: Array<{ p1: string; p2: string }> = [
 const CELEBRITIES_PACK: WordPack = {
   id: 'pack-celebrities',
   name: 'Pack Celebrities',
-  description: '¿Eres de los que valoran lo bueno? Personas icónicas mundialmente reconocibles.',
+  description: 'Personas icónicas mundialmente reconocibles.',
   language: 'es',
   wordItems: [
     { word: "Einstein",        attributes: ["Patente"]      },

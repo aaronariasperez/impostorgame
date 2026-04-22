@@ -1,17 +1,20 @@
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 
-// Get or create session ID
+// Get or create session ID — persisted in localStorage, with in-memory fallback
+let memorySessionId: string | null = null;
+
 function getSessionId(): string {
+  const key = 'impostor_sid';
   try {
-    const key = 'impostor_sid';
     const existing = localStorage.getItem(key);
     if (existing) return existing;
     const sid = crypto.randomUUID();
     localStorage.setItem(key, sid);
     return sid;
   } catch {
-    return crypto.randomUUID();
+    if (!memorySessionId) memorySessionId = crypto.randomUUID();
+    return memorySessionId;
   }
 }
 
